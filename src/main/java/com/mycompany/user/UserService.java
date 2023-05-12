@@ -9,12 +9,13 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-        @Autowired private UserRepository repo;       //Lấy dữ liệu từ UserRepository
+    @Autowired private UserRepository repo;       //Lấy dữ liệu từ UserRepository
 
-        //Lấy tất cả danh sách từ bảng User
-        public List<User> listAll() {
-            return (List<User>) repo.findAll();
-        }
+    //Lấy tất cả danh sách từ bảng User
+    public List<User> listAll() {
+        return (List<User>) repo.findAll();
+    }
+
 
     //Lấy tất cả danh sách từ bảng User, dựa vào trường enabled
     public List<User> listAllEnabled() {

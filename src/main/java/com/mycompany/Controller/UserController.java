@@ -1,18 +1,20 @@
 package com.mycompany.Controller;
 
+import com.mycompany.dto.UserDTO;
 import com.mycompany.user.User;
 import com.mycompany.user.UserNotFoundException;
 import com.mycompany.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
-//@Controller     //để xử lý các request
+//@Controller     //để xử lý các request, trả về trang
 @RestController   //xây dựng các RESTful API
-@RequestMapping(path = "/api/v1") //Annotation này ánh xạ các HTTP request tới các phương thức xử lý của MVC và REST controller
+//@RequestMapping(path = "/api/v1") //Annotation này ánh xạ các HTTP request tới các phương thức xử lý của MVC và REST controller
 public class UserController {
     @Autowired
     private UserService service;   //service Lấy dữ liệu từ UserService
@@ -71,9 +73,9 @@ public class UserController {
     }
 
 
-    //Test Postman
-    //Test Class User
-    @GetMapping ("/test-users")
+    //Sử dụng Postman để test api
+    //Kiểm tra dữ liệu nhập vào Class User
+    @GetMapping (value="/test-users")
     public User TestShowUser(@RequestBody User user) {
 
         System.out.println("Id: " + user.getId());
@@ -98,7 +100,7 @@ public class UserController {
 
 
     //Test Postman, xem danh sách các users
-    @GetMapping ("/test-list-users")
+    @GetMapping (value="/users/all")
     public  List<User> TestShowUserList(@RequestBody User user) {
         List<User> listUsers = service.listAll();
 
@@ -120,7 +122,7 @@ public class UserController {
 
 
     //Test Postman, xem danh sách các users có enabled là true
-    @GetMapping ("/test-list-users-enabled-true")
+    @GetMapping (value="/users")
     public  List<User> TestShowUserListEnabled(@RequestBody User user) {
         List<User> listUsers = service.listAllEnabled();
 
@@ -135,7 +137,7 @@ public class UserController {
     }
 
     //Test Postman, thêm 1 user mới
-    @PostMapping ("/test-create-users")
+    @PostMapping (value="/users")
     public User TestCreateUser(@RequestBody User AddNewUser) {
         return service.save(AddNewUser);
 
@@ -151,8 +153,9 @@ public class UserController {
             "enabled": true
     } */
 
+
     //Test Postman edit, tìm kiếm thông tin user theo mã id
-    @GetMapping("/test-list-users-edit/{id}")
+    @GetMapping(value="/users/{id}")
     public User TestShowEditForm(@RequestBody User user, @PathVariable("id") Integer id) {
         try {
             return service.edit(id);
@@ -169,7 +172,7 @@ public class UserController {
     } */
 
     //Test Postman edit, tìm kiếm thông tin user theo mã id, lưu lại thay đổi thông tin người dùng
-    @PutMapping ("/test-list-users-edit-save/{id}")
+    @PutMapping (value="/users/{id}")
     public User TestShowEditSaveForm(@RequestBody User user, @PathVariable("id") Integer id) {
         try {
             user.setId(id);
@@ -192,7 +195,7 @@ public class UserController {
 
 
     //Test Postman delete, xoá luôn
-    @GetMapping("/test-list-users-delete/{id}")
+    @DeleteMapping (value="/test-users/{id}")
     public User TestDeleteUser(@RequestBody User user, @PathVariable("id") Integer id) {
         try {
             service.delete(id);
@@ -210,7 +213,7 @@ public class UserController {
     } */
 
     //Test Postman delete, xoá tạm thời, cập nhật enable true thành false để ẩn khỏi danh sách các users có enabled là true mới được hiển thị.
-    @PutMapping ("/test-list-users-delete-enabled-false/{id}")
+    @DeleteMapping ("/users/{id}")
     public String TestDeleteUserEnabled(@PathVariable("id") Integer id) {
         try {
             service.deleteSaveEnabled(id);   //Cập nhật lại enable true thành false để ẩn khỏi danh sách các users có enabled là true, xem hàm trong UserService
@@ -223,4 +226,5 @@ public class UserController {
 //
     //Master 14:31 12.05.2023
     //Dev 14.33 12.05.2023
+    //Dev 14:58 12.05.2023
 }
