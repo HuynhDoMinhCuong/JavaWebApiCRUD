@@ -52,7 +52,6 @@ public class UserService {
          repo.deleteById(id);
     }
 
-
    //
     public User editSave(User user) throws UserNotFoundException {
         Optional<User> result = repo.findById(user.getId()); //Tìm kiếm theo mã id
@@ -74,7 +73,6 @@ public class UserService {
         throw new UserNotFoundException("Could not find any users with ID " + user.getId()); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
     }
 
-
     //Hàm xoá tạm thời theo mã id user, cập nhật lại trường enabled từ true thành false để ẩn khỏi danh sách users
     public User deleteSaveEnabled(int id) throws UserNotFoundException {
         Optional<User> result = repo.findById(id); //Tìm kiếm theo mã id
@@ -88,5 +86,5 @@ public class UserService {
         }
         throw new UserNotFoundException("Could not find any users with ID " + id); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
     }
-
+//
 }
