@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Users</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" />
+    <!--<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />-->
+</head>
+
+<style>
+    div.text-center{
+        text-align: center;
+    }
+    div.dialog{
+        background-color: aliceblue;
+        color: red;
+        position: fixed;
+        top:0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity linear 0.2s;
+    }
+    div.dialog:target{
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .btn {
+        text-align: center;
+        height:50px;
+        width:200px;
+    }
+
+</style>
+
+<body>
+<div class="container-fluid text-center">
+    <div><h2>  Manage Users </h2></div>
+    <div class="m-2">
+        <a class="h3" th:href="@{/api/v1/ListUsers/AddNewUser}"> Add New User </a> <!-- Đường dẫn thêm 1 user mới -->
+    </div>
+
+    <div th:if="${message}" class="alert alert-success text-center">
+
+        [[${message}]]     <!-- Hiển thị thông báo, hàm thông báo xem trong UserControler -->
+    </div>
+
+    <div>
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>E-mail</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Enabled</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <th:block th:each="user : ${listUsers}">   <!-- Tên "listUsers" đã đặt trong UserController, @GetMapping ("/ListUsers")--->
+                <tr>
+                    <td>[[${user.id}]]</td>
+                    <td>[[${user.email}]]</td>
+                    <td>[[${user.firstName}]]</td>
+                    <td>[[${user.lastName}]]</td>
+                    <td>[[${user.enabled}]]</td>
+                    <td>
+                        <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/edit/' + ${user.id}}" >Edit</a>
+                        <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/delete/' + ${user.id}}" >Delete </a>
+
+                        <!--
+                        <a class="dialog-btn h4 mr-3" href="#my-dialog-delete">Delete 02</a>
+                        <div class="dialog overlay" id="my-dialog-delete">
+                            <div class="text-center">
+                                <h3>Do you want delete ?</h3>
+                                    <p> <a class="btn btn-danger" th:href="@{'/api/v1/ListUsers/delete/' + ${user.id}}" >Yes</a></p>
+                                    <p> <a class="btn btn-success" th:href="@{/api/v1/ListUsers}" >Cancel</a></p>
+                            </div>
+                        </div>-->
+
+                    </td>
+                </tr>
+            </th:block>
+
+            </tbody>
+
+
+        </table>
+
+    </div>
+</div>
+<!--
+<script src ="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src ="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
+</body>
+</html>
