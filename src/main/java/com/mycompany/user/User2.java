@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "users") //Tên bảng sẽ lưu vào MySQL
 
-public class User {
+public class User2 {
     @Id
     //Tự động tạo ra giá trị id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //Khoá chính
@@ -31,6 +31,10 @@ public class User {
     }
 
     public void setId(Integer id) {
+        if(id != null)
+        {
+            return;
+        }
         this.id = id;
     }
 
