@@ -1,16 +1,18 @@
 package com.mycompany.Controller;
 
 import com.mycompany.user.User;
+import com.mycompany.user.User2;
 import com.mycompany.user.UserNotFoundException;
 import com.mycompany.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
-//@Controller     //để xử lý các request
+//@Controller     //để xử lý các request, trả về trang
 @RestController   //xây dựng các RESTful API
 @RequestMapping(path = "/api/v1") //Annotation này ánh xạ các HTTP request tới các phương thức xử lý của MVC và REST controller
 public class UserController {
@@ -38,16 +40,16 @@ public class UserController {
     //Create: dùng POST method
     @PostMapping("/ListUsers/save") //Đặt tên đường dẫn, viết lại đường dẫn trang users_form.html sẽ thấy đường dẫn th:action="@{/ListUsers/save}" method="post" th:object="${AddNewUser}"
     public String saveUser (User AddNewUser, RedirectAttributes ra) {
-         service.save(AddNewUser);
-         System.out.println("Hello: " + AddNewUser.getFirstName());
-         ra.addFlashAttribute("message", "The user has been saved successfully"); //Đưa ra thông báo khi lưu thông tin người dùng thành công, xem lstUsers.html sẽ thấy khai báo [[${message}]] hiển thị thông báo
-         return "redirect:/api/v1/ListUsers"; //Trả về đường dẫn ListUsers, trang lstUsers.html
+            service.save(AddNewUser); //Lấy thông tin user theo mã id, khi người dùng nhấn vào edit hoặc delete trong danh sách user_form.html
+            System.out.println("Hello: " + AddNewUser.getFirstName());
+            ra.addFlashAttribute("message", "The user has been saved successfully"); //Đưa ra thông báo khi lưu thông tin người dùng thành công, xem lstUsers.html sẽ thấy khai báo [[${message}]] hiển thị thông báo
+            return "redirect:/api/v1/ListUsers"; //Trả về đường dẫn ListUsers, trang lstUsers.html
     }
 
     @GetMapping("/ListUsers/edit/{id}") //Đặt tên đường dẫn, viết lại đường dẫn trang users.html, đoạn code edit và delete theo mã id, th:href="@{'/ListUsers/edit/' + ${user.id}}"
     public String showEditForm(@PathVariable("id") Integer id, Model model, RedirectAttributes ra) {
         try {
-            User user = service.edit(id); //Lấy thông tin user theo mã id, khi người dùng nhấn vào edit hoặc delete trong danh sách user_form.html
+            User user = service.searchID(id); //Lấy thông tin user theo mã id, khi người dùng nhấn vào edit hoặc delete trong danh sách user_form.html
             model.addAttribute("AddNewUser", user); //Đặt tên AddNewUser, gọi tên vào th:object="${AddNewUser}" trong user_form.html
             model.addAttribute("pageTitle", "Edit User (ID: " + id + ")"); //Gọi tiêu đề trang tab <title> và <h2> là [[${pageTitle}]] ở user_form.html, in ra chữ Edit User có mã là...
             return "user_form"; //Trả về trang user_form.html, dùng để điền các thông tin của 1 user
@@ -71,9 +73,9 @@ public class UserController {
     }
 
 
-    //Test Postman
-    //Test Class User
-    @GetMapping ("/test-users")
+    //Sử dụng Postman để test api
+    //Kiểm tra dữ liệu nhập vào Class User
+    @GetMapping (value="/test-users")
     public User TestShowUser(@RequestBody User user) {
 
         System.out.println("Id: " + user.getId());
@@ -98,7 +100,7 @@ public class UserController {
 
 
     //Test Postman, xem danh sách các users
-    @GetMapping ("/test-list-users")
+    @GetMapping (value="/users/all")
     public  List<User> TestShowUserList(@RequestBody User user) {
         List<User> listUsers = service.listAll();
 
@@ -120,25 +122,24 @@ public class UserController {
 
 
     //Test Postman, xem danh sách các users có enabled là true
-    @GetMapping ("/test-list-users-enabled-true")
-    public  List<User> TestShowUserListEnabled(@RequestBody User user) {
+    @GetMapping (value="/users")
+    public  List<User> TestShowUserListEnabled() {
         List<User> listUsers = service.listAllEnabled();
 
-        System.out.println("Id: " + user.getId());
-        System.out.println("Email: " + user.getEmail());
-        System.out.println("Password: " + user.getPassword());
-        System.out.println("First Name: " + user.getFirstName());
-        System.out.println("Last Name: " + user.getLastName());
-        System.out.println("Enabled: " + user.isEnabled());
+      //  System.out.println("Id: " + user.getId());
+      //  System.out.println("Email: " + user.getEmail());
+      //  System.out.println("Password: " + user.getPassword());
+      //  System.out.println("First Name: " + user.getFirstName());
+      //  System.out.println("Last Name: " + user.getLastName());
+      //  System.out.println("Enabled: " + user.isEnabled());
 
         return listUsers; //Trả về trang lstUsers.html để xem danh sách các users
     }
 
     //Test Postman, thêm 1 user mới
-    @PostMapping ("/test-create-users")
-    public User TestCreateUser(@RequestBody User AddNewUser) {
-        return service.save(AddNewUser);
-
+    @PostMapping (value="/users")
+    public User2 TestCreateUser(@RequestBody User2 AddNewUser) {
+            return service.save2(AddNewUser);
     }
 
     /*
@@ -152,13 +153,14 @@ public class UserController {
     } */
 
     //Test Postman edit, tìm kiếm thông tin user theo mã id
-    @GetMapping("/test-list-users-edit/{id}")
-    public User TestShowEditForm(@RequestBody User user, @PathVariable("id") Integer id) {
+    @GetMapping(value="/users/{id}")
+    public Object TestShowEditForm(@PathVariable("id") Integer id) {
         try {
-            return service.edit(id);
+            return service.searchID(id);
+
         } catch (UserNotFoundException e) {
 
-            return user;
+            return e.getMessage();
         }
     }
 
@@ -169,7 +171,7 @@ public class UserController {
     } */
 
     //Test Postman edit, tìm kiếm thông tin user theo mã id, lưu lại thay đổi thông tin người dùng
-    @PutMapping ("/test-list-users-edit-save/{id}")
+    @PutMapping (value="/users/{id}")
     public User TestShowEditSaveForm(@RequestBody User user, @PathVariable("id") Integer id) {
         try {
             user.setId(id);
@@ -179,6 +181,7 @@ public class UserController {
             return user;
         }
     }
+
 
      /*
     {
@@ -192,7 +195,7 @@ public class UserController {
 
 
     //Test Postman delete, xoá luôn
-    @GetMapping("/test-list-users-delete/{id}")
+    @DeleteMapping (value="/test-users/{id}")
     public User TestDeleteUser(@RequestBody User user, @PathVariable("id") Integer id) {
         try {
             service.delete(id);
@@ -210,17 +213,15 @@ public class UserController {
     } */
 
     //Test Postman delete, xoá tạm thời, cập nhật enable true thành false để ẩn khỏi danh sách các users có enabled là true mới được hiển thị.
-    @PutMapping ("/test-list-users-delete-enabled-false/{id}")
+    @DeleteMapping ("/users/{id}")
     public String TestDeleteUserEnabled(@PathVariable("id") Integer id) {
         try {
             service.deleteSaveEnabled(id);   //Cập nhật lại enable true thành false để ẩn khỏi danh sách các users có enabled là true, xem hàm trong UserService
-            return "Delete success"    ;
+            return "Delete success";
         } catch (UserNotFoundException e) {
 
             return e.getMessage();
         }
     }
-//
-    //Master 14:31 12.05.2023
-    //Dev 14.33 12.05.2023
+
 }
