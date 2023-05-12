@@ -57,7 +57,7 @@ public class UserController {
         }
     }
 
-
+//Master 13:55 12.05.2023
     @GetMapping("/ListUsers/delete/{id}") //Đặt tên đường dẫn, viết lại đường dẫn trang lstUsers.html, đoạn code edit và delete theo mã id, th:href="@{'/ListUsers/edit/' + ${user.id}}"
     public String deleteUser(@PathVariable("id") Integer id, Model model, RedirectAttributes ra) {
         try {
@@ -221,5 +221,5 @@ public class UserController {
         }
     }
 
-//Master 13:29 12.05.2023
+//Master 14:10 12.05.2023
 }
