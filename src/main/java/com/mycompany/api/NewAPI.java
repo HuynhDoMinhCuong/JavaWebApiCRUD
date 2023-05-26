@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 //@Controller
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/Dev01
 @RestController
 public class NewAPI {
     //@RequestMapping(value = "/new", method = RequestMethod.POST)
