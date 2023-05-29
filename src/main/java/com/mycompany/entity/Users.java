@@ -3,6 +3,7 @@ package com.mycompany.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+//Dùng cho hàm tìm kiếm theo id, update, delete
 @Data
 @Entity
 @Table(name = "users") //Tên bảng sẽ lưu vào MySQL
@@ -26,7 +27,5 @@ public class Users {
 
     @Column(name = "enabled")
     private boolean enabled;
-
-
 
 }

@@ -3,6 +3,7 @@ package com.mycompany.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+//Dùng cho hàm thêm 1 user mới
 @Data
 @Entity
 @Table(name = "users") //Tên bảng sẽ lưu vào MySQL
@@ -32,7 +33,7 @@ public class Users2 {
     }
 
     public void setId(Integer id) {
-        if(id!=null)
+        if(id!=null)                    //Nếu id nhập vào trùng sẽ trả về id tự động tăng, tránh trường hợp dùng Postman nhập id vào trùng với Database khiến nó update lại thay vì thêm mới.
         {
             return;
         }

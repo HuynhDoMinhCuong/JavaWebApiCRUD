@@ -1,6 +1,5 @@
 package com.mycompany.user;
 
-import com.mycompany.dto.UsersDTO;
 import com.mycompany.entity.Users;
 import com.mycompany.entity.Users2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,53 +8,37 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@Service //Trao đổi dữ liệu giữa các ứng dụng hoặc giữa các hệ thống
 public class UserService {
     @Autowired
-    private UserRepository repo;       //Lấy dữ liệu từ UserRepository
+    private UserRepository repo;        //Lấy dữ liệu từ UserRepository
     @Autowired
-    private UserRepository2 repo2;
+    private UserRepository2 repo2;      //Lấy dữ liệu từ UserRepository2
 
     //Lấy tất cả danh sách từ bảng User
     public List<Users> listAll() {
         return (List<Users>) repo.findAll();
     }
 
-
-    //Lấy tất cả danh sách từ bảng User, dựa vào trường enabled
+    //Lấy tất cả danh sách từ bảng User, dựa vào trường enabled là true thì mới xuất ra danh sách
     public List<Users> listAllEnabled() {
-        return (List<Users>) repo.findAllByEnabled(true);  //Lấy ra danh sách user có enabled là true
+        return (List<Users>) repo.findAllByEnabled(true);  //Trả về danh sách Users có enabled là true
     }
 
-    //Hàm save dùng cho hàm editSave (Sửa 1 user)
+    //Hàm save dùng cho hàm editSave, sửa thông tin 1 user và lưu lại. Dùng cho update và delete tạm thời (cập nhập trường enable từ true thành false để ẩn khỏi danh sách users có trường enable là false)
     public Users save(Users EditSave){
-        Users save = repo.save(EditSave);
-        return save;
+        Users editSave = repo.save(EditSave);
+        return editSave;
     }
 
-
-    //Hàm save dùng cho hàm thêm mới 1 Users
+    //Hàm save2 dùng cho hàm thêm mới 1 Users, Class Users2 bị ràng buộc id, id tự tăng theo stt. Tránh trường hợp dùng Postman gọi id bị trùng vào khiến nó update lại thay vì thêm mới.
     public Users2 save2(Users2 AddNewUser){
-        Users2 save2 = repo2.save(AddNewUser);
-        return save2;
+        Users2 addUser = repo2.save(AddNewUser);
+        return addUser;
     }
 
-
-    //
-
-
-    //Hàm Save kiểm tra giá trị id đã tồn tại trong MySQL hay chưa.
-    // Sử dụng Postman gọi mã id vào.
+    //Test
     /*
-       {
-            "id": 18,
-            "email": "admin18@gmail.com",
-            "password": 123456,
-            "firstName": "admin18",
-            "lastName": "Intern",
-            "enabled": true
-       }
-     */
     public Users save3(Users AddNewUser) throws UserNotFoundException{
         Users save3 = repo.save(AddNewUser); //Tìm kiếm theo mã id
 
@@ -65,10 +48,9 @@ public class UserService {
             return save3;
         }
         throw new UserNotFoundException("Could not find any users with ID " + save3.getId()); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
-    }
+    }*/
 
-
-    // Hàm edit theo mã id user
+    // Hàm tìm kiếm theo mã id user
     // Xem trang lstUsers.html sẽ thấy đoạn code lấy đường dẫn lấy theo mã id User, edit. <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/edit/' + ${user.id}}" >Edit</a>
     // UserController @GetMapping("/ListUsers/edit/{id}")
     public Users searchID(Integer id) throws UserNotFoundException {
@@ -80,20 +62,18 @@ public class UserService {
         throw new UserNotFoundException("Could not find any users with ID " +id); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
     }
 
-
-    //Hàm xoá theo mã id user
+    //Hàm xoá theo mã id user, xoá luôn trong Database MySQL
+    /*
     public void delete (Integer id) throws UserNotFoundException {
          Long count = repo.countById(id);   //Độ dài giá trị đếm theo id, xem hàm khai báo countById trong UserRepository
         //Kiểm tra giá trị đếm
         if (count == null || count ==0) {
             throw new UserNotFoundException("Could not find any users with ID " +id); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
-
         }
-
          repo.deleteById(id);
-    }
+    }*/
 
-   //
+    //Hàm update
     public Users editSave(Users user) throws UserNotFoundException {
         Optional<Users> result = repo.findById(user.getId()); //Tìm kiếm theo mã id
 
@@ -108,7 +88,7 @@ public class UserService {
             updateUser.setLastName(user.getLastName());
             updateUser.setEnabled(user.isEnabled());
 
-            Users save = this.save(updateUser);
+            Users save = this.save(updateUser);  //Lấy thông tin đã sửa
             return save;
         }
         throw new UserNotFoundException("Could not find any users with ID " + user.getId()); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
@@ -144,5 +124,5 @@ public class UserService {
         throw new UserNotFoundException("Could not find any users with ID " + user.getId()); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
     }
 
-//Master 13:25 12.05.2023
+//
 }

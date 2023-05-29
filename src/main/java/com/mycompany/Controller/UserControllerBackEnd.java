@@ -6,67 +6,57 @@ import com.mycompany.entity.Users2;
 import com.mycompany.user.UserNotFoundException;
 import com.mycompany.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import java.util.List;
 
-//@Controller     //để xử lý các request, trả về trang
-@RestController   //xây dựng các RESTful API
+//@Controller     //Để xử lý các request, trả về trang
+@RestController   //Xây dựng các RESTful API
 @RequestMapping(path = "/api/v1") //Annotation này ánh xạ các HTTP request tới các phương thức xử lý của MVC và REST controller
 public class UserControllerBackEnd {
     @Autowired
-    private UserService service;   //service Lấy dữ liệu từ UserService
-
+    private UserService service;   //service lấy dữ liệu từ UserService
 
     //Sử dụng Postman để test api
-    //Kiểm tra dữ liệu nhập vào Class User
-    @GetMapping (value="/test-users")
-    public Users TestShowUser(@RequestBody Users user) {
+    //Kiểm tra dữ liệu nhập vào Class UsersDTO, không có lưu vào Database MySQL.
+    @PostMapping (value="/test/users")
+    public UsersDTO TestShowUser(@RequestBody UsersDTO userDto) {
 
-        System.out.println("Id: " + user.getId());
-        System.out.println("Email: " + user.getEmail());
-        System.out.println("Password: " + user.getPassword());
-        System.out.println("First Name: " + user.getFirstName());
-        System.out.println("Last Name: " + user.getLastName());
-        System.out.println("Enabled: " + user.isEnabled());
+        System.out.println("id: " + userDto.getId());
+        System.out.println("email: " + userDto.getEmail());
+        System.out.println("Password: " + userDto.getPassword());
+        System.out.println("First Name: " + userDto.getFirstName());
+        System.out.println("Last Name: " + userDto.getLastName());
+        System.out.println("Enabled: " + userDto.isEnabled());
 
-        return user;
+        return userDto;
     }
 
     /*
     {
-            "id": "7",
-            "email": "admin7@gmail.com",
+            "id": "1",
+            "email": "admin1@gmail.com",
             "password": 123456,
-            "firstName": "admin7",
+            "firstName": "admin1",
             "lastName": "Intern",
-            "enabled": false
+            "enabled": true
     } */
 
-
-    //Test Postman, xem danh sách các users
+    //Test Postman, xem danh sách tất cả các users có trong Database MySQL
     @GetMapping (value="/users/all")
-    public  List<Users> TestShowUserList(@RequestBody Users user) {
+    public  List<Users> TestShowUserList() {
         List<Users> listUsers = service.listAll();
 
-        System.out.println("Id: " + user.getId());
-        System.out.println("Email: " + user.getEmail());
-        System.out.println("Password: " + user.getPassword());
-        System.out.println("First Name: " + user.getFirstName());
-        System.out.println("Last Name: " + user.getLastName());
-        System.out.println("Enabled: " + user.isEnabled());
+        //System.out.println("Id: " + user.getId());
+        //System.out.println("Email: " + user.getEmail());
+        //System.out.println("Password: " + user.getPassword());
+        //System.out.println("First Name: " + user.getFirstName());
+        //System.out.println("Last Name: " + user.getLastName());
+        //System.out.println("Enabled: " + user.isEnabled());
 
-        return listUsers; //Trả về trang lstUsers.html để xem danh sách các users
+        return listUsers;
     }
-
-       /*
-    {
-            "id": null
-
-    } */
-
 
     //Test Postman, xem danh sách các users có enabled là true
     @GetMapping (value="/users")
@@ -80,7 +70,7 @@ public class UserControllerBackEnd {
         //  System.out.println("Last Name: " + user.getLastName());
         //  System.out.println("Enabled: " + user.isEnabled());
 
-        return listUsers; //Trả về trang lstUsers.html để xem danh sách các users
+        return listUsers;
     }
 
     //Test Postman, thêm 1 user mới
@@ -99,7 +89,7 @@ public class UserControllerBackEnd {
             "enabled": true
     } */
 
-    //Test Postman edit, tìm kiếm thông tin user theo mã id
+    //Test Postman tìm kiếm thông tin user theo mã id
     @GetMapping(value="/users/{id}")
     public Object TestShowEditForm(@PathVariable("id") Integer id) {
         try {
@@ -110,12 +100,6 @@ public class UserControllerBackEnd {
             return e.getMessage();
         }
     }
-
-   /*
-    {
-        "id": null
-
-    } */
 
     //Test Postman edit, tìm kiếm thông tin user theo mã id, lưu lại thay đổi thông tin người dùng
     @PutMapping (value="/users/{id}")
@@ -129,7 +113,6 @@ public class UserControllerBackEnd {
         }
     }
 
-
      /*
     {
 
@@ -140,8 +123,8 @@ public class UserControllerBackEnd {
             "enabled": true
     } */
 
-
     //Test Postman delete, xoá luôn
+    /*
     @DeleteMapping (value="/test-users/{id}")
     public Users TestDeleteUser(@RequestBody Users user, @PathVariable("id") Integer id) {
         try {
@@ -151,7 +134,7 @@ public class UserControllerBackEnd {
 
         }
         return user;
-    }
+    }*/
 
      /*
     {
@@ -170,8 +153,5 @@ public class UserControllerBackEnd {
             return e.getMessage();
         }
     }
-//
-    //Master 14:31 12.05.2023
-    //Dev 14.33 12.05.2023
-    //Dev 14:58 12.05.2023
+
 }

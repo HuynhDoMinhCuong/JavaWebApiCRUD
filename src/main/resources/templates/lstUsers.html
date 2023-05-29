@@ -8,6 +8,7 @@
 </head>
 
 <style>
+
     div.text-center{
         text-align: center;
     }
@@ -66,7 +67,7 @@
             </thead>
 
             <tbody>
-            <th:block th:each="user : ${listUsers}">   <!-- Tên "listUsers" đã đặt trong UserController, @GetMapping ("/ListUsers")--->
+            <th:block th:each="user : ${listUsers}">   <!-- Tên "listUsers" đã đặt trong UserControllerFullStack, @GetMapping ("/ListUsers") -->
                 <tr>
                     <td>[[${user.id}]]</td>
                     <td>[[${user.email}]]</td>
@@ -74,8 +75,8 @@
                     <td>[[${user.lastName}]]</td>
                     <td>[[${user.enabled}]]</td>
                     <td>
-                        <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/edit/' + ${user.id}}" >Edit</a>
-                        <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/delete/' + ${user.id}}" >Delete </a>
+                        <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/edit/' + ${user.id}}" >Edit</a>                  <!-- Xem trong UserControllerFullStack hàm @GetMapping("/ListUsers/edit/{id}") -->
+                        <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/delete/' + ${user.id}}" >Delete </a>             <!-- Xem trong UserControllerFullStack hàm @GetMapping("/ListUsers/delete/{id}") -->
 
                         <!--
                         <a class="dialog-btn h4 mr-3" href="#my-dialog-delete">Delete 02</a>

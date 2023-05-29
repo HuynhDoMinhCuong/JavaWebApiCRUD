@@ -11,5 +11,4 @@ public class UsersDTO {
     private String password;
     private boolean enabled;
 
-
 }
