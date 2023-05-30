@@ -1,7 +1,6 @@
 package com.mycompany.user;
 
 import com.mycompany.entity.Users;
-import com.mycompany.entity.Users2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +11,6 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     private UserRepository repo;        //Lấy dữ liệu từ UserRepository
-    @Autowired
-    private UserRepository2 repo2;      //Lấy dữ liệu từ UserRepository2
 
     //Lấy tất cả danh sách từ bảng User
     public List<Users> listAll() {
@@ -21,20 +18,45 @@ public class UserService {
     }
 
     //Lấy tất cả danh sách từ bảng User, dựa vào trường enabled là true thì mới xuất ra danh sách
-    public List<Users> listAllEnabled() {
+    public List<Users> listAllEnabledTrue() {
         return (List<Users>) repo.findAllByEnabled(true);  //Trả về danh sách Users có enabled là true
     }
 
-    //Hàm save dùng cho hàm editSave, sửa thông tin 1 user và lưu lại. Dùng cho update và delete tạm thời (cập nhập trường enable từ true thành false để ẩn khỏi danh sách users có trường enable là false)
-    public Users save(Users EditSave){
+    public List<Users> listAllEnabledFalse() {
+        return (List<Users>) repo.findAllByEnabled(false);  //Trả về danh sách Users có enabled là false
+    }
+
+    //Hàm EditSave, sửa thông tin 1 user và lưu lại. Dùng cho update và delete tạm thời (cập nhập trường enable từ true thành false để ẩn khỏi danh sách users có trường enable là false)
+    //Xem UserControllerBackEnd sẽ thấy được gọi EditSave ở hàm @PutMapping (value="/users/{id}") ,Xem UserControllerFullStack sẽ thấy được gọi EditSave ở hàm @PostMapping("/ListUsers/update")
+    public Users EditSave(Users EditSave){
         Users editSave = repo.save(EditSave);
         return editSave;
     }
 
+    /*
     //Hàm save2 dùng cho hàm thêm mới 1 Users, Class Users2 bị ràng buộc id, id tự tăng theo stt. Tránh trường hợp dùng Postman gọi id bị trùng vào khiến nó update lại thay vì thêm mới.
     public Users2 save2(Users2 AddNewUser){
         Users2 addUser = repo2.save(AddNewUser);
         return addUser;
+
+    }*/
+
+    //Hàm saveNewUser, dùng để thêm 1 user mới, bị ràng buộc bởi hàm public boolean isValidationId.
+    public Users saveNewUser (Users AddNewUser) throws UserNotFoundException {
+
+        if(isValidationId(AddNewUser)) {
+            Users addUser = repo.save(AddNewUser);
+            return addUser;
+        }
+        throw new UserNotFoundException("Could not save this users with ID " + AddNewUser.getId()); //Thông báo lỗi: Không thể lưu users này với id là...
+    }
+
+    // Hàm boolean xét đúng, sai.
+    public boolean isValidationId(Users users) {
+        if(users.getId() != null) {              //Không cho nhập id, tránh trường hợp dùng Postman nhập id đã có trong MySQL vào hàm thêm 1 user mới khiến nó update lại thay vì thêm 1 user mới.
+            return false;
+        }
+       return true;
     }
 
     //Test
@@ -51,7 +73,7 @@ public class UserService {
     }*/
 
     // Hàm tìm kiếm theo mã id user
-    // Xem trang lstUsers.html sẽ thấy đoạn code lấy đường dẫn lấy theo mã id User, edit. <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/edit/' + ${user.id}}" >Edit</a>
+    // Xem trang lstUsersEnableTrue.html sẽ thấy đoạn code lấy đường dẫn lấy theo mã id User, edit. <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/edit/' + ${user.id}}" >Edit</a>
     // UserController @GetMapping("/ListUsers/edit/{id}")
     public Users searchID(Integer id) throws UserNotFoundException {
         Optional<Users> result = repo.findById(id); //Tìm kiếm theo mã id
@@ -88,26 +110,31 @@ public class UserService {
             updateUser.setLastName(user.getLastName());
             updateUser.setEnabled(user.isEnabled());
 
-            Users save = this.save(updateUser);  //Lấy thông tin đã sửa
-            return save;
+            Users EditSave = this.EditSave(updateUser);  //Chuyển đến hàm EditSave để lưu lại
+            return EditSave;
         }
         throw new UserNotFoundException("Could not find any users with ID " + user.getId()); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
     }
 
-    //Hàm xoá tạm thời theo mã id user, cập nhật lại trường enabled từ true thành false để ẩn khỏi danh sách users
+    //Hàm xoá tạm thời theo mã id user, cập nhật lại trường enabled từ true thành false để ẩn khỏi danh sách users.
+    //Xem UserControllerBackEnd sẽ thấy gọi hàm deleteEnabledTrue trong hàm @DeleteMapping ("/users/{id}")
+    //Hàm này dùng Postman để kiểm tra api, tìm thấy mã id user thì tiến hành update lại thông tin mới.
     public Users deleteEnabledTrue(int id) throws UserNotFoundException {
         Optional<Users> result = repo.findById(id); //Tìm kiếm theo mã id
 
         //Kiểm tra giá trị
         if (result.isPresent()) {
-            result.get().setEnabled(false);          //Cập nhật trường enabled thành false
+            result.get().setEnabled(false);                     //Cập nhật trường enabled thành false
 
-            Users updateEnabled = this.save(result.get());
-            return updateEnabled;
+            Users EditSave = this.EditSave(result.get());       //Chuyển đến hàm EditSave để lưu lại
+            return EditSave;
         }
-        throw new UserNotFoundException("Could not find any users with ID " + id); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
+        throw new UserNotFoundException("Could not find any users with ID " + id); //Xuất thông báo lỗi không tìm thấy bất kỳ users nào với id là...
     }
 
+    //Hàm xoá tạm thời theo mã id user, cập nhật lại trường enabled từ true thành false để ẩn khỏi danh sách users.
+    //Xem UserControllerFullStack sẽ thấy gọi hàm deleteEnabledTrue2 trong hàm @DeleteMapping ("/users/{id}")
+    //Hàm này tương tự hàm EditSave, sử dụng trong trường hợp trả về trang web html, tìm thấy mã id user sẽ lấy thông tin users đưa lên user_form_Delete.html. Sau đó ở trong form nhấn nút Delete để xác nhận xoá tạm thời.
     public Users deleteEnabledTrue2(Users user) throws UserNotFoundException {
         Optional<Users> result = repo.findById(user.getId()); //Tìm kiếm theo mã id
 
@@ -115,14 +142,13 @@ public class UserService {
         if (result.isPresent()) {
             Users updateUser = result.get();
 
+            //Trường enable của Class Users trong Database MySQL hiển thị số 1 là true, số 0 là false
+            updateUser.setEnabled(false);                   //Cập nhật lại trường enable trong Class Users từ true thành false. Thì trong danh sách Users nó sẽ bị ẩn thông tin có id đó và trong Database MySQL thì vẫn còn chứa thông tin users, không xoá luôn.
 
-            updateUser.setEnabled(false);
-
-            Users save = this.save(updateUser);
-            return save;
+            Users EditSave = this.EditSave(updateUser);     //Chuyển đến hàm EditSave để lưu lại
+            return EditSave;
         }
         throw new UserNotFoundException("Could not find any users with ID " + user.getId()); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
     }
 
-//
 }

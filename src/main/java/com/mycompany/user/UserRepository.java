@@ -8,9 +8,13 @@ import java.util.List;
 //CrudRepository có các hàm save, findById, delete
 //Dùng cho hàm tìm kiếm theo id, editSave, delete.
 public interface UserRepository extends CrudRepository<Users, Integer> {
-    //
+
+    //Dùng cho hàm xoá luôn, xem trong UserService
+    /*
     public Long countById (Integer id); //Độ dài giá trị đếm theo id
+    */
+
     //
-    public List<Users> findAllByEnabled(boolean enabled);  //Tìm trường enabled trong Class User để xuất ra danh sách các users có enabled là true
+    public List<Users> findAllByEnabled(boolean enabled);  //Tìm trường enabled trong Class User để xuất ra danh sách các users có enabled là true. Xem trong UserControllerFullStack, hàm  @GetMapping ("/ListUsers"). Và trong UserControllerBachEnd, hàm @GetMapping (value="/users")
 
 }

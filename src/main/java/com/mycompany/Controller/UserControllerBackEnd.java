@@ -2,7 +2,6 @@ package com.mycompany.Controller;
 
 import com.mycompany.dto.UsersDTO;
 import com.mycompany.entity.Users;
-import com.mycompany.entity.Users2;
 import com.mycompany.user.UserNotFoundException;
 import com.mycompany.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +60,7 @@ public class UserControllerBackEnd {
     //Test Postman, xem danh sách các users có enabled là true
     @GetMapping (value="/users")
     public  List<Users> TestShowUserListEnabled() {
-        List<Users> listUsers = service.listAllEnabled();
+        List<Users> listUsers = service.listAllEnabledTrue();
 
         //  System.out.println("Id: " + user.getId());
         //  System.out.println("Email: " + user.getEmail());
@@ -75,8 +74,8 @@ public class UserControllerBackEnd {
 
     //Test Postman, thêm 1 user mới
     @PostMapping (value="/users")
-    public Users2 TestCreateUser(@RequestBody Users2 AddNewUser) {
-        return service.save2(AddNewUser);
+    public Users TestCreateUser(@RequestBody Users AddNewUser) throws UserNotFoundException{
+            return service.saveNewUser(AddNewUser);
     }
 
     /*
