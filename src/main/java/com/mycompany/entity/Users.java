@@ -12,13 +12,10 @@ public class Users {
     @Id
     //Tự động tạo ra giá trị id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //Khoá chính
-
     private Integer id;
 
     @Column(name = "email", nullable = false, unique = true, length = 45) //Khoá ngoại
-    @UsersEmail
     private String email;
-
 
     @Column(name = "password", length = 15, nullable = false)
     private String password;

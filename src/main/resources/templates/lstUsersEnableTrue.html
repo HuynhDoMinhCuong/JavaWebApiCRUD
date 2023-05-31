@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title> Manage Users </title>
+    <title> Manage Users Online </title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" />
     <!--<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />-->
 </head>
@@ -43,9 +43,9 @@
 
 <body>
 <div class="container-fluid text-center">
-    <div><h2> Manage Users </h2></div>
+    <div><h2> Manage Users Online </h2></div>
     <div class="m-2">
-        <a class="h3" th:href="@{/api/v1/ListUsers/AddNewUser}"> Add New User </a> <!-- Đường dẫn thêm 1 user mới -->
+        <a class="h3" th:href="@{/api/v1/ListUsers/AddNewUser}"> Add new user </a> <!-- Đường dẫn thêm 1 user mới -->
         <a class="h3"> || </a>
         <a class="h3" th:href="@{/}"> Back to home </a> <!-- Trở lại trang chủ -->
     </div>
@@ -65,12 +65,12 @@
                 <th>Last Name</th>
                 <th>Enabled</th>
                 <th>Setting</th>
-                <!-- <th></th> -->
+                <!-- <th> </th> -->
             </tr>
             </thead>
 
             <tbody>
-            <th:block th:each="user : ${listUsersEnableTrue}">   <!-- Tên "listUsers" đã đặt trong UserControllerFullStack, @GetMapping ("/listUsersEnableTrue") -->
+            <th:block th:each="user : ${listUsersEnableTrue}">   <!-- Tên "listUsers" đã đặt trong UserControllerFullStack, @GetMapping ("/ListUsers") -->
                 <tr>
                     <td>[[${user.id}]]</td>
                     <td>[[${user.email}]]</td>

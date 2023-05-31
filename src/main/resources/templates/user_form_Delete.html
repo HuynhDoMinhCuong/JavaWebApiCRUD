@@ -17,6 +17,8 @@
 <div class="container-fluid">
   <div class="text-center"><h2>[[${pageTitle}]]</h2></div>
 
+  <!-- Xem UserControllerFullStack hàm @PostMapping("/ListUsers/delete") -->
+  <!-- Xem UserControllerFullStack hàm @GetMapping("/ListUsers/delete/{id}") -->
   <form th:action="@{/api/v1/ListUsers/delete}" method="post" th:object="${DeleteUser}"
         style="max-width: 500px; margin: 0 auto;">
     <input type="hidden" th:field="*{id}"> <!-- Edit user theo mã id -->

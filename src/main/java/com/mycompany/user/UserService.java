@@ -17,6 +17,25 @@ public class UserService {
         return (List<Users>) repo.findAll();
     }
 
+
+    //Hàm tìm kiếm theo tên gần giống, firstName và lastName và xuất ra danh sách, xem câu lệnh Query trong UserRepository
+    public List<Users> findAllSearchName(String keyword) {
+        if (keyword != null) {
+            return repo.findAllSearchName(keyword);
+        }
+        return (List<Users>) repo.findAll();
+    }
+
+    //Hàm tìm kiếm theo số id và xuất ra danh sách, xem câu lệnh Query trong UserRepository
+    public List<Users> findAllSearchID(String id) {
+        if (id != null) {
+            return repo.findAllSearchID(id);
+        }
+        return (List<Users>) repo.findAll();
+    }
+
+
+
     //Lấy tất cả danh sách từ bảng User, dựa vào trường enabled là true thì mới xuất ra danh sách
     public List<Users> listAllEnabledTrue() {
         return (List<Users>) repo.findAllByEnabled(true);  //Trả về danh sách Users có enabled là true

@@ -17,9 +17,11 @@
 <div class="container-fluid">
   <div class="text-center"><h2>[[${pageTitle}]]</h2></div>
 
-  <form th:action="@{/api/v1/ListUsers/save}" method="post" th:object="${AddNewUser}"
-        style="max-width: 500px; margin: 0 auto;">
-    <input type="hidden" th:field="*{id}"> <!-- Edit user theo mã id -->
+  <!-- Xem UserControllerFullStack hàm @PostMapping("/ListUsers/save") -->
+  <!-- Xem UserControllerFullStack hàm @GetMapping ("/ListUsers/AddNewUser") -->
+ <form th:action="@{/api/v1/ListUsers/save}" method="post" th:object="${AddNewUser}"
+       style="max-width: 500px; margin: 0 auto;">
+   <input type="hidden" th:field="*{id}"> <!-- Edit user theo mã id -->
     <div class="border border-secondary rounded p-3">
       <div class="form-group row">
         <label class="col-sm-4 col-form-label"> E-mail </label>
