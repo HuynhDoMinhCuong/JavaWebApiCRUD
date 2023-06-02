@@ -1,6 +1,6 @@
 package com.mycompany;
 
-import com.mycompany.user.User;
+import com.mycompany.entity.Users;
 import com.mycompany.user.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,6 +11,7 @@ import org.springframework.test.annotation.Rollback;
 
 import java.util.Optional;
 
+//Hàm test
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Rollback(false)
@@ -19,13 +20,13 @@ public class UserRepositoryTests {
 
     @Test //Hàm thêm
     public void testAddNew(){
-        User user = new User();
+        Users user = new Users();
         user.setEmail("admin2.gmail.com");
         user.setPassword("123456");
         user.setFirstName("admin2");
         user.setLastName("Intern");
 
-        User savedUser = repo.save(user);
+        Users savedUser = repo.save(user);
 
         Assertions.assertThat(savedUser).isNotNull();
         Assertions.assertThat(savedUser.getId()).isGreaterThan(0);
@@ -34,10 +35,10 @@ public class UserRepositoryTests {
 
     @Test //Hàm lấy danh sách users
     public void testListAll() {
-        Iterable<User> users = repo.findAll();
+        Iterable<Users> users = repo.findAll();
         Assertions.assertThat(users).hasSizeGreaterThan(0);
 
-        for (User user : users) {
+        for (Users user : users) {
             System.out.println(user);
         }
     }
@@ -45,19 +46,19 @@ public class UserRepositoryTests {
     @Test //Hàm update
     public void testUpdate() {
         Integer userId = 1;
-        Optional<User> optionalUser = repo.findById(userId);
-        User user = optionalUser.get();
+        Optional<Users> optionalUser = repo.findById(userId);
+        Users user = optionalUser.get();
         user.setPassword("654321");
         repo.save(user);
 
-        User updatedUser = repo.findById(userId).get();
+        Users updatedUser = repo.findById(userId).get();
         Assertions.assertThat(updatedUser.getPassword()).isEqualTo("654321");
     }
 
     @Test //Hàm tìm kiếm user theo mã userId
     public void testGet() {
         Integer userId = 2;
-        Optional<User> optionalUser = repo.findById(userId);
+        Optional<Users> optionalUser = repo.findById(userId);
         Assertions.assertThat(optionalUser).isPresent();
         System.out.println(optionalUser.get());
 
@@ -68,7 +69,7 @@ public class UserRepositoryTests {
         Integer userId = 2;
         repo.deleteById(userId);
 
-        Optional<User> optionalUser = repo.findById(userId);
+        Optional<Users> optionalUser = repo.findById(userId);
         Assertions.assertThat(optionalUser).isNotPresent();
 
     }

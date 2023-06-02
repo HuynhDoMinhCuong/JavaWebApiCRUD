@@ -2,12 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Manage Users</title>
+    <title> Manage Users </title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" />
     <!--<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />-->
 </head>
 
 <style>
+
     div.text-center{
         text-align: center;
     }
@@ -42,9 +43,11 @@
 
 <body>
 <div class="container-fluid text-center">
-    <div><h2>  Manage Users </h2></div>
+    <div><h2> Manage Users </h2></div>
     <div class="m-2">
         <a class="h3" th:href="@{/api/v1/ListUsers/AddNewUser}"> Add New User </a> <!-- Đường dẫn thêm 1 user mới -->
+        <a class="h3"> || </a>
+        <a class="h3" th:href="@{/}"> Back to home </a> <!-- Trở lại trang chủ -->
     </div>
 
     <div th:if="${message}" class="alert alert-success text-center">
@@ -61,12 +64,13 @@
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Enabled</th>
-                <th></th>
+                <th>Setting</th>
+                <!-- <th></th> -->
             </tr>
             </thead>
 
             <tbody>
-            <th:block th:each="user : ${listUsers}">   <!-- Tên "listUsers" đã đặt trong UserController, @GetMapping ("/ListUsers")--->
+            <th:block th:each="user : ${listUsersEnableTrue}">   <!-- Tên "listUsers" đã đặt trong UserControllerFullStack, @GetMapping ("/listUsersEnableTrue") -->
                 <tr>
                     <td>[[${user.id}]]</td>
                     <td>[[${user.email}]]</td>
@@ -74,8 +78,8 @@
                     <td>[[${user.lastName}]]</td>
                     <td>[[${user.enabled}]]</td>
                     <td>
-                        <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/edit/' + ${user.id}}" >Edit</a>
-                        <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/delete/' + ${user.id}}" >Delete </a>
+                        <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/edit/' + ${user.id}}" >Edit</a>                  <!-- Xem trong UserControllerFullStack hàm @GetMapping("/ListUsers/edit/{id}") -->
+                        <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/delete/' + ${user.id}}" >Delete </a>             <!-- Xem trong UserControllerFullStack hàm @GetMapping("/ListUsers/delete/{id}") -->
 
                         <!--
                         <a class="dialog-btn h4 mr-3" href="#my-dialog-delete">Delete 02</a>
