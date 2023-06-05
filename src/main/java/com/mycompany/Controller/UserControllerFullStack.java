@@ -21,27 +21,64 @@ public class UserControllerFullStack {
     private UserService service;   //service Lấy dữ liệu từ UserService
 
     //Read: dùng GET method
-    //Danh sách các users có trường enabled là true
-    @GetMapping ("/ListUsers")        //Đặt tên đường dẫn, viết lại đường dẫn ở trang index.html sẽ thấy đường dẫn th:href="@{/ListUsers}">
-    public String showUserListTrue(Model model) {
-        List<Users> listUsers = service.listAllEnabledTrue(); //Lấy danh sách tất cả các Users có trường enabled là true
-        model.addAttribute("listUsersEnableTrue", listUsers);    //Viết lại "listUsersEnableTrue" đã đặt trong trang lstUsersEnableTrue.html     <th:block th:each="user : ${listUsersEnableTrue}">
-
+    //Danh sách các users
+    @GetMapping ("/ListUsers/All")        //Đặt tên đường dẫn, viết lại đường dẫn ở trang index.html sẽ thấy đường dẫn th:href="@{/ListUsers/All}">
+    public String showUserListAll(Model model, @Param("keyword") String keyword, @Param("id") Integer id) throws UserNotFoundException {
+        if (keyword != null){
+            List<Users> listUsers = service.findAllSearchName(keyword); //Lấy danh sách tất cả các Users
+            model.addAttribute("listUsersAll", listUsers);    //Viết lại "listUsersAll" đã đặt trong trang lstUsersAll.html     <th:block th:each="user : ${listUsersAll}">
+        }
+        else if (id != null && id >0){
+            Users listUsers = service.searchID(id); //
+            model.addAttribute("listUsersAll", listUsers);    //Viết lại "listUsersAll" đã đặt trong trang lstUsersAll.html     <th:block th:each="user : ${listUsersAll}">
+        }
+        else {
+            List<Users> listUsersAll = service.listAll(); //Lấy danh sách tất cả các Users
+            model.addAttribute("listUsersAll", listUsersAll);
+        }
         System.out.println("User Controller");
-        return "lstUsersEnableTrue"; //Trả về trang lstUsersEnableTrue.html để xem danh sách các users có trường enable là true
+        return "lstUsersAll"; //Trả về trang lstUsersAll.html
+    }
+
+    //Read: dùng GET method
+    //Danh sách các users có trường enabled là true
+    @GetMapping ("/ListUsers/Online")        //Đặt tên đường dẫn, viết lại đường dẫn ở trang index.html sẽ thấy đường dẫn th:href="@{/ListUsers}">
+    public String showUserListTrue(Model model, @Param("keyword") String keyword, @Param("id") String id) throws UserNotFoundException{
+        if (keyword != null){
+            List<Users> listUsers = service.findAllSearchNameEnableTrue(keyword); //Lấy danh sách tất cả các Users
+            model.addAttribute("lstUsersEnableTrue", listUsers);    //Viết lại "listUsersAll" đã đặt trong trang lstUsersAll.html     <th:block th:each="user : ${listUsersAll}">
+        }
+        else if (id != null){
+            List<Users> listUsers = service.findAllSearchIdEnableTrue(id); //Lấy danh sách tất cả các Users
+            model.addAttribute("lstUsersEnableTrue", listUsers);    //Viết lại "listUsersAll" đã đặt trong trang lstUsersAll.html     <th:block th:each="user : ${listUsersAll}">
+        }
+        else {
+            List<Users> listUsersAll = service.listAllEnabledTrue(); //Lấy danh sách tất cả các Users
+            model.addAttribute("lstUsersEnableTrue", listUsersAll);
+        }
+        System.out.println("User Controller");
+        return "lstUsersEnableTrue"; //Trả về trang lstUsersAll.html
     }
 
     //Read: dùng GET method
     //Danh sách các users ó trường enabled là false
     @GetMapping ("/ListUsers/Recover")        //Đặt tên đường dẫn, viết lại đường dẫn ở trang index.html sẽ thấy đường dẫn <a class="h2" th:href="@{/api/v1/ListUsers/Recover}"> Recover Deleted Users </a>
-    public String showUserListFalse(Model model) {
-        List<Users> listUsers = service.listAllEnabledFalse(); //Lấy danh sách tất cả các Users có trường enabled là false
-        model.addAttribute("listUsersEnableFalse", listUsers);    //Viết lại "listUsers" đã đặt trong trang lstUsersEnableFalse.html     <th:block th:each="user : ${listUsersAll}">
-
+    public String showUserListFalse(Model model, @Param("keyword") String keyword, @Param("id") String id) throws UserNotFoundException{
+        if (keyword != null){
+            List<Users> listUsers = service.findAllSearchNameEnableFalse(keyword); //Lấy danh sách tất cả các Users
+            model.addAttribute("lstUsersEnableFalse", listUsers);    //Viết lại "listUsersAll" đã đặt trong trang lstUsersAll.html     <th:block th:each="user : ${listUsersAll}">
+        }
+        else if (id != null){
+            List<Users> listUsers = service.findAllSearchIdEnableFlase(id); //Lấy danh sách tất cả các Users
+            model.addAttribute("lstUsersEnableFalse", listUsers);    //Viết lại "listUsersAll" đã đặt trong trang lstUsersAll.html     <th:block th:each="user : ${listUsersAll}">
+        }
+        else {
+            List<Users> listUsersAll = service.listAllEnabledFalse(); //Lấy danh sách tất cả các Users
+            model.addAttribute("lstUsersEnableFalse", listUsersAll);
+        }
         System.out.println("User Controller");
-        return "lstUsersEnableFalse"; //Trả về trang lstUsersEnableFalse.html để xem danh sách các users
+        return "lstUsersEnableFalse"; //Trả về trang lstUsersAll.html
     }
-
     //Read: dùng GET method
     //Hàm dẫn đường dẫn đến trang user_form_Save.html
     @GetMapping ("/ListUsers/AddNewUser") //Đặt tên đường dẫn, viết lại đường dẫn trang lstUsersEnableTrue.html sẽ thấy đường dẫn <a class="h3" th:href="@{/api/v1/ListUsers/AddNewUser}"> Add New User </a>
@@ -59,33 +96,13 @@ public class UserControllerFullStack {
         service.saveNewUser(AddNewUser); //Lấy thông tin user theo mã id, khi người dùng nhấn vào edit hoặc delete trong danh sách user_form_Update.html
         System.out.println("Hello: " + AddNewUser.getFirstName());
         ra.addFlashAttribute("message", "The user has been save successfully"); //Đưa ra thông báo khi lưu thông tin người dùng thành công, xem lstUsersEnableTrue.html sẽ thấy khai báo [[${message}]] hiển thị thông báo
-        return "redirect:/api/v1/ListUsers"; //Trả về đường dẫn @GetMapping ("/ListUsers"), trang lstUsersEnableTrue.html
+        return "redirect:/api/v1/ListUsers/All"; //Trả về đường dẫn @GetMapping ("/ListUsers"), trang lstUsersEnableTrue.html
 
-    }
-
-    //Create: dùng POST method
-    //Hàm dẫn đường dẫn đến trang lstUsersEnableTrue.html
-    @PostMapping("/ListUsers/update") //Đặt tên đường dẫn, viết lại đường dẫn trang users_form_Update.html sẽ thấy đường dẫn th:action="@{/ListUsers/update}" method="post" th:object="${EditUser}"
-    public String updateUser (Users EditUser, RedirectAttributes ra) throws UserNotFoundException {
-        service.EditSave(EditUser); //Lấy thông tin user theo mã id, khi người dùng nhấn vào edit hoặc delete trong danh sách user_form_Update.html
-        System.out.println("Hello: " + EditUser.getFirstName());
-        ra.addFlashAttribute("message", "The user has been update successfully"); //Đưa ra thông báo khi lưu thông tin người dùng thành công, xem lstUsersEnableTrue.html sẽ thấy khai báo [[${message}]] hiển thị thông báo
-        return "redirect:/api/v1/ListUsers"; //Trả về đường dẫn @GetMapping ("/ListUsers"), trang lstUsersEnableTrue.html
-    }
-
-    //Create: dùng POST method, editSave
-    //Hàm dẫn đường dẫn đến trang lstUsersEnableFalse.html
-    @PostMapping("/ListUsers/updateEnable") //Đặt tên đường dẫn, viết lại đường dẫn trang users_form_Update_Enabled.html sẽ thấy đường dẫn th:action="@{/ListUsers/updateEnable}" method="post" th:object="${EditUser}"
-    public String updateUserEnable (Users EditUser, RedirectAttributes ra) throws UserNotFoundException {
-        service.EditSave(EditUser); //Lấy thông tin user theo mã id, khi người dùng nhấn vào edit hoặc delete trong danh sách user_form_Update.html
-        System.out.println("Hello: " + EditUser.getFirstName());
-        ra.addFlashAttribute("message", "The user has been update successfully"); //Đưa ra thông báo khi lưu thông tin người dùng thành công, xem lstUsersEnableTrue.html sẽ thấy khai báo [[${message}]] hiển thị thông báo
-        return "redirect:/api/v1/ListUsers/Recover"; //Trả về đường dẫn @GetMapping ("/ListUsers/Recover"), trang lstUsersEnableFalse.html
     }
 
     //Read: dùng GET method
-    //Hàm updateUser, xem trang user_form_Update.html. Không cho cập nhật lại trường enable, các trường khác sửa thông tin và cập nhật bình thường.
-    @GetMapping("/ListUsers/edit/{id}") //Đặt tên đường dẫn, viết lại đường dẫn trang lstUsersEnableTrue.html, đoạn code edit và delete theo mã id, th:href="@{'/ListUsers/edit/' + ${user.id}}"
+    //Hàm cập nhật Users, xem trang user_form_Update.html. Không cho sửa lại trường enable, các trường khác sửa thông tin và cập nhật bình thường.
+    @GetMapping("/ListUsers/update/{id}") //Đặt tên đường dẫn, viết lại đường dẫn trang lstUsersEnableTrue.html, lstUsersAll, đoạn code edit và delete theo mã id, th:href="@{'/ListUsers/update/' + ${user.id}}"
     public String showEditForm(@PathVariable("id") Integer id, Model model, RedirectAttributes ra) {
         try {
             Users user = service.searchID(id); //Lấy thông tin user theo mã id, khi người dùng nhấn vào edit hoặc delete trong danh sách user_form_Update.html
@@ -98,20 +115,41 @@ public class UserControllerFullStack {
         }
     }
 
+    //Create: dùng POST method
+    //Hàm dẫn đường dẫn đến trang lstUsersEnableTrue.html
+    @PostMapping("/ListUsers/update") //Đặt tên đường dẫn, viết lại đường dẫn trang users_form_Update.html sẽ thấy đường dẫn th:action="@{/ListUsers/update}" method="post" th:object="${EditUser}"
+    public String updateUser (Users EditUser, RedirectAttributes ra) throws UserNotFoundException {
+        service.EditSave(EditUser); //Lấy thông tin user theo mã id, khi người dùng nhấn vào edit hoặc delete trong danh sách user_form_Update.html
+        System.out.println("Hello: " + EditUser.getFirstName());
+        ra.addFlashAttribute("message", "The user has been update successfully"); //Đưa ra thông báo khi lưu thông tin người dùng thành công, xem lstUsersEnableTrue.html sẽ thấy khai báo [[${message}]] hiển thị thông báo
+        return "redirect:/api/v1/ListUsers/All"; //Trả về đường dẫn @GetMapping ("/ListUsers"), trang lstUsersEnableTrue.html
+    }
+
     //Read: dùng GET method
     //Hàm update, xem trang user_form_Update_Enable cho phép chỉnh sửa trường enable từ false sang true
-    @GetMapping("/ListUsers/editEnable/{id}") //Đặt tên đường dẫn, viết lại đường dẫn trang lstUsersEnableFalse.html, đoạn code edit và delete theo mã id, th:href="@{'/ListUsers/editEnable/' + ${user.id}}"
+    @GetMapping("/ListUsers/updateEnable/{id}") //Đặt tên đường dẫn, viết lại đường dẫn trang lstUsersEnableFalse.html, đoạn code edit và delete theo mã id, th:href="@{'/ListUsers/editEnable/' + ${user.id}}"
     public String showEditFormUpdateEnable(@PathVariable("id") Integer id, Model model, RedirectAttributes ra) {
         try {
             Users user = service.searchID(id); //Lấy thông tin user theo mã id, khi người dùng nhấn vào edit hoặc delete trong danh sách user_form_Update.html
             model.addAttribute("EditUserUpdateEnable", user); //Đặt tên EditUserUpdateEnable, gọi tên vào th:object="${EditUserUpdateEnable}" trong user_form_Update_Enable.html
-            model.addAttribute("pageTitle", "Edit User (ID: " + id + ")"); //Gọi tiêu đề trang tab <title> và <h2> là [[${pageTitle}]] ở user_form_Update.html, in ra chữ Edit User có mã là...
+            model.addAttribute("pageTitle", "Recover User (ID: " + id + ")"); //Gọi tiêu đề trang tab <title> và <h2> là [[${pageTitle}]] ở user_form_Update.html, in ra chữ Edit User có mã là...
             return "user_form_Update_Enable"; //Trả về trang user_form_Update_Enable.html, dùng để điền các thông tin của 1 user, editSave
         } catch (UserNotFoundException e) {
             ra.addFlashAttribute("message", e.getMessage()); //e.getMessage sẽ lấy thông báo từ UserService của hàm save. Thông báo lỗi, thông báo sẽ hiển thị ở trang danh sách users, lstUsersEnableTrue.html
-            return "redirect:/api/v1/ListUsers"; //Trả về đường dẫn @GetMapping ("/ListUsers"), trang lstUsersEnableFalse.html
+            return "redirect:/api/v1/ListUsers/All"; //Trả về đường dẫn @GetMapping ("/ListUsers"), trang lstUsersEnableFalse.html
         }
     }
+
+    //Create: dùng POST method, editSave
+    //Hàm dẫn đường dẫn đến trang lstUsersEnableFalse.html
+    @PostMapping("/ListUsers/updateEnable") //Đặt tên đường dẫn, viết lại đường dẫn trang users_form_Update_Enabled.html sẽ thấy đường dẫn th:action="@{/ListUsers/updateEnable}" method="post" th:object="${EditUser}"
+    public String updateUserEnable (Users EditUser, RedirectAttributes ra) throws UserNotFoundException {
+        service.EditSave(EditUser); //Lấy thông tin user theo mã id, khi người dùng nhấn vào edit hoặc delete trong danh sách user_form_Update.html
+        System.out.println("Hello: " + EditUser.getFirstName());
+        ra.addFlashAttribute("message", "The user has been update successfully"); //Đưa ra thông báo khi lưu thông tin người dùng thành công, xem lstUsersEnableTrue.html sẽ thấy khai báo [[${message}]] hiển thị thông báo
+        return "redirect:/api/v1/ListUsers/Recover"; //Trả về đường dẫn @GetMapping ("/ListUsers/Recover"), trang lstUsersEnableFalse.html
+    }
+
 
     //Cách 1. Nhấn nút delete trong lisUser.html sẽ cập nhật lại trường enable từ true thành false
     /*
@@ -138,7 +176,7 @@ public class UserControllerFullStack {
             return "user_form_Delete"; //Trả về trang user_form_Delete.html
         } catch (UserNotFoundException e) {
             ra.addFlashAttribute("message", e.getMessage()); //e.getMessage sẽ lấy thông báo từ UserService của hàm save. Thông báo lỗi, thông báo sẽ hiển thị ở trang danh sách users, lstUsersEnableTrue.html
-            return "redirect:/api/v1/ListUsers"; //Trả về đường dẫn @GetMapping ("/ListUsers/enabled"), trang lstUsersEnableTrue.html
+            return "redirect:/api/v1/ListUsers/All"; //Trả về đường dẫn @GetMapping ("/ListUsers/enabled"), trang lstUsersEnableTrue.html
         }
     }
 
@@ -154,42 +192,24 @@ public class UserControllerFullStack {
         } catch (UserNotFoundException e) {
             ra.addFlashAttribute("message", e.getMessage()); //e.getMessage sẽ lấy thông báo từ UserService của hàm delete.Thông báo lỗi, thông báo sẽ hiển thị ở trang danh sách users, lstUsersEnableTrue.html
         }
-        return "redirect:/api/v1/ListUsers"; //Trả về đường dẫn @GetMapping ("/ListUsers/enabled"), trang lstUsersEnableTrue.html
+        return "redirect:/api/v1/ListUsers/All"; //Trả về đường dẫn @GetMapping ("/ListUsers/enabled"), trang lstUsersEnableTrue.html
     }
 
 
 
-    //Read: dùng GET method
-    //Danh sách các users
-    @GetMapping ("/ListUsers/All")        //Đặt tên đường dẫn, viết lại đường dẫn ở trang index.html sẽ thấy đường dẫn th:href="@{/ListUsers/All}">
-    public String showUserListAll(Model model, @Param("keyword") String keyword, @Param("id") String id) throws UserNotFoundException {
-        if (keyword != null){
-            List<Users> listUsers = service.findAllSearchName(keyword); //Lấy danh sách tất cả các Users
-
-            model.addAttribute("listUsersAll", listUsers);    //Viết lại "listUsersAll" đã đặt trong trang lstUsersAll.html     <th:block th:each="user : ${listUsersAll}">
-        }
-
-       else {
-            List<Users> listUsers2 = service.findAllSearchID(id); //Lấy danh sách tất cả các Users
-
-
-            model.addAttribute("listUsersAll", listUsers2);
-        }
-
-
-        System.out.println("User Controller");
-        return "lstUsersAll"; //Trả về trang lstUsersAll.html
-    }
 
 
 
+    //
+    /*
     @GetMapping ("/ListUsers/SearchUser") //Đặt tên đường dẫn, viết lại đường dẫn trang lstUsersEnableTrue.html sẽ thấy đường dẫn <a class="h3" th:href="@{/api/v1/ListUsers/AddNewUser}"> Add New User </a>
     public String showSearchUserForm(Model model) {
         model.addAttribute("SearchUser", new Users()); //Đặt tên AddNewUser, gọi tên vào th:object="${AddNewUser}" trong user_form_Save.html
         model.addAttribute("pageTitle", "Search User"); //Gọi tiêu đề trang tab <title> và <h2> là [[${pageTitle}]] ở user_form_Update.html, in ra chữ AddNewUser
         return "user_form_All"; //Trả về trang user_form_Save.html để điền các thông tin của 1 user
-    }
+    }*/
 
+    /*
     @GetMapping("/ListUsers/All/{id}") //Đặt tên đường dẫn, viết lại đường dẫn trang lstUsersAll.html, đoạn code edit và delete theo mã id, th:href="@{'/ListUsers/All/' + ${user.id}}"
     public String showEditFormAll(@PathVariable("id") Integer id, Model model, RedirectAttributes ra) {
         try {
@@ -201,8 +221,9 @@ public class UserControllerFullStack {
             ra.addFlashAttribute("message", e.getMessage()); //e.getMessage sẽ lấy thông báo từ UserService của hàm save. Thông báo lỗi, thông báo sẽ hiển thị ở trang danh sách users, lstUsersEnableTrue.html
             return "redirect:/api/v1/ListUsers/Search"; //Trả về đường dẫn @GetMapping ("/ListUsers/Search"), trang lstUsersAll.html
         }
-    }
+    } */
 
+    /*
     @GetMapping("/ListUsers/search/{id}") //Đặt tên đường dẫn, viết lại đường dẫn trang lstUsersAll.html, đoạn code edit và delete theo mã id, th:href="@{'/ListUsers/search/' + ${user.id}}"
     public String showEditFormASearch2(@PathVariable("id") Integer id, Model model, RedirectAttributes ra) {
         try {
@@ -214,9 +235,10 @@ public class UserControllerFullStack {
             ra.addFlashAttribute("message", e.getMessage()); //e.getMessage sẽ lấy thông báo từ UserService của hàm save. Thông báo lỗi, thông báo sẽ hiển thị ở trang danh sách users, lstUsersEnableTrue.html
             return "redirect:/api/v1/ListUsers/Search"; //Trả về đường dẫn @GetMapping ("/ListUsers/Search"), trang lstUsersAll.html
         }
-    }
+    }*/
 
-/*
+    //
+    /*
     @GetMapping("/ListUsers/All?Id={id}") //Đặt tên đường dẫn, viết lại đường dẫn trang lstUsersEnableFalse.html, đoạn code edit và delete theo mã id, th:href="@{'/ListUsers/editEnable/' + ${user.id}}"
     public String showEditFormASearch3(@PathVariable("id") Integer id, Model model, RedirectAttributes ra) {
         try {
@@ -229,6 +251,5 @@ public class UserControllerFullStack {
             return "redirect:/api/v1/ListUsers/Search"; //Trả về đường dẫn @GetMapping ("/ListUsers/Search"), trang lstUsersAll.html
         }
     } */
-
 
 }

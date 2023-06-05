@@ -26,14 +26,37 @@ public class UserService {
         return (List<Users>) repo.findAll();
     }
 
-    //Hàm tìm kiếm theo số id và xuất ra danh sách, xem câu lệnh Query trong UserRepository
-    public List<Users> findAllSearchID(String id) {
-        if (id != null) {
-            return repo.findAllSearchID(id);
+    //Hàm tìm kiếm theo tên gần giống, firstName và lastName, có enable là true và xuất ra danh sách, xem câu lệnh Query trong UserRepository
+    public List<Users> findAllSearchNameEnableTrue(String keyword) {
+        if (keyword != null) {
+            return repo.findAllSearchNameEnableTrue(keyword);
         }
         return (List<Users>) repo.findAll();
     }
 
+    //Hàm tìm kiếm theo tên gần giống, firstName và lastName, có enable là false và xuất ra danh sách, xem câu lệnh Query trong UserRepository
+    public List<Users> findAllSearchNameEnableFalse(String keyword) {
+        if (keyword != null) {
+            return repo.findAllSearchNameEnableFalse(keyword);
+        }
+        return (List<Users>) repo.findAll();
+    }
+
+    //Hàm tìm kiếm theo id, có enable là true và xuất ra danh sách, xem câu lệnh Query trong UserRepository
+    public List<Users> findAllSearchIdEnableTrue(String id) {
+        if (id != null) {
+            return repo.findAllSearchIdEnableTrue(id);
+        }
+        return (List<Users>) repo.findAll();
+    }
+
+    //Hàm tìm kiếm theo id, có enable là false và xuất ra danh sách, xem câu lệnh Query trong UserRepository
+    public List<Users> findAllSearchIdEnableFlase(String id) {
+        if (id != null) {
+            return repo.findAllSearchIdEnableFalse(id);
+        }
+        return (List<Users>) repo.findAll();
+    }
 
 
     //Lấy tất cả danh sách từ bảng User, dựa vào trường enabled là true thì mới xuất ra danh sách

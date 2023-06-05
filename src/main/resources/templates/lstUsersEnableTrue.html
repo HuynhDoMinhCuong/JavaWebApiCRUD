@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title> Manage Users Online </title>
+    <title> List Users Online </title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" />
     <!--<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />-->
 </head>
@@ -34,19 +34,58 @@
     }
 
     .btn {
-        text-align: center;
-        height:50px;
-        width:200px;
+        text-align: center;   /* Canh chữ của button */
+        height:40px;
+        width:100px;
     }
 
 </style>
 
 <body>
 <div class="container-fluid text-center">
-    <div><h2> Manage Users Online </h2></div>
+    <div><h2> List Users Online </h2></div>
+
+    <form style="max-width: 500px; margin: auto;">
+        <div>
+            <div class="border border-secondary rounded p-3">
+                <form th:action="@{/api/v1/ListUsers/Online}">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label"> Name: </label>
+                        <div class="col-sm-10">
+                            <input type="text" name="keyword" placeholder="Search name..." class="form-control" required minlength="1" maxlength="45" />
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary m-2"> Search </button>
+                        <button type="button" th:href="@{'/api/v1/ListUsers/Online'}" class="btn btn-success m-2" onclick="cancelForm()"> Clear </button>
+                    </div>
+                </form>
+            </div>
+            <p></p>
+            <div class="border border-secondary rounded p-3">
+                <form th:action="@{/api/v1/ListUsers/Online}" >
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label"> Id: </label>
+                        <div class="col-sm-10">
+                            <input type="number" name="id" placeholder="Search id..." class="form-control" required minlength="1" maxlength="99" />
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary m-2"> Search </button>
+                        <!--<button type="submit" class="btn btn-primary m-2"> Search </button>-->
+                        <button type="button" th:href="@{'/api/v1/ListUsers/Online'}" class="btn btn-success m-2" onclick="cancelForm()"> Clear </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </form>
+
     <div class="m-2">
-        <a class="h3" th:href="@{/api/v1/ListUsers/AddNewUser}"> Add new user </a> <!-- Đường dẫn thêm 1 user mới -->
-        <a class="h3"> || </a>
+        <!-- <a class="h3" th:href="@{/api/v1/ListUsers/AddNewUser}"> Add new user </a> --> <!-- Đường dẫn thêm 1 user mới -->
+        <!-- <a class="h3"> || </a> -->
         <a class="h3" th:href="@{/}"> Back to home </a> <!-- Trở lại trang chủ -->
     </div>
 
@@ -64,22 +103,22 @@
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Enabled</th>
-                <th>Setting</th>
+                <!-- <th>Setting</th> -->
                 <!-- <th> </th> -->
             </tr>
             </thead>
 
             <tbody>
-            <th:block th:each="user : ${listUsersEnableTrue}">   <!-- Tên "listUsers" đã đặt trong UserControllerFullStack, @GetMapping ("/ListUsers") -->
+            <th:block th:each="user : ${lstUsersEnableTrue}">   <!-- Tên "listUsers" đã đặt trong UserControllerFullStack, @GetMapping ("/ListUsers") -->
                 <tr>
                     <td>[[${user.id}]]</td>
                     <td>[[${user.email}]]</td>
                     <td>[[${user.firstName}]]</td>
                     <td>[[${user.lastName}]]</td>
                     <td>[[${user.enabled}]]</td>
-                    <td>
-                        <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/edit/' + ${user.id}}" >Edit</a>                  <!-- Xem trong UserControllerFullStack hàm @GetMapping("/ListUsers/edit/{id}") -->
-                        <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/delete/' + ${user.id}}" >Delete </a>             <!-- Xem trong UserControllerFullStack hàm @GetMapping("/ListUsers/delete/{id}") -->
+                    <!-- <td> -->
+                        <!-- <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/update/' + ${user.id}}" >Edit</a> -->                 <!-- Xem trong UserControllerFullStack hàm @GetMapping("/ListUsers/edit/{id}") -->
+                        <!-- <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/delete/' + ${user.id}}" >Delete </a> -->            <!-- Xem trong UserControllerFullStack hàm @GetMapping("/ListUsers/delete/{id}") -->
 
                         <!--
                         <a class="dialog-btn h4 mr-3" href="#my-dialog-delete">Delete 02</a>
@@ -102,6 +141,11 @@
 
     </div>
 </div>
+<script type="text/javascript">
+    function cancelForm() {
+        window.location = "[[@{/api/v1/ListUsers/Online}]]";
+    }
+</script>
 <!--
 <script src ="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src ="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->

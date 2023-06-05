@@ -19,16 +19,38 @@ public interface UserRepository extends CrudRepository<Users, Integer> {
     public List<Users> findAllByEnabled(boolean enabled);  //Tìm trường enabled trong Class User để xuất ra danh sách các users có enabled là true. Xem trong UserControllerFullStack, hàm  @GetMapping ("/ListUsers"). Và trong UserControllerBachEnd, hàm @GetMapping (value="/users")
 
 
-    // Hàm tìm kiếm theo họ, tên gần giống, mã số id
+    // Hàm tìm kiếm theo họ, tên gần giống
     @Query ("SELECT n FROM Users n WHERE n.firstName LIKE %?1%"
                 + " OR n.lastName LIKE %?1%")
     public List<Users> findAllSearchName (String keyword);
 
-
-
+    //
     @Query ("SELECT i FROM Users i WHERE i.id = ?1")
     public List<Users> findAllSearchID (String id);
 
+    // Hàm tìm kiếm theo họ, tên gần giống, có trường enable là true = 1
+    @Query ("SELECT n FROM Users n WHERE n.firstName LIKE %?1% "
+            + " AND n.enabled = true"
+            + " OR n.lastName LIKE %?1%"
+            + " AND n.enabled = true" )
+    public List<Users> findAllSearchNameEnableTrue (String keyword);
+
+    //Hàm tìm kiếm theo id cci1 enable là true
+    @Query ("SELECT i FROM Users i WHERE i.id = ?1"
+            + " AND i.enabled = true" )
+    public List<Users> findAllSearchIdEnableTrue (String id);
+
+    // Hàm tìm kiếm theo họ, tên gần giống, có trường enable là false = 0
+    @Query ("SELECT n FROM Users n WHERE n.firstName LIKE %?1%"
+            + " AND n.enabled = FALSE"
+            + " OR n.lastName LIKE %?1%"
+            + " AND n.enabled = false" )
+    public List<Users> findAllSearchNameEnableFalse (String keyword);
+
+    //Hàm tìm kiếm theo id cci1 enable là false
+    @Query ("SELECT i FROM Users i WHERE i.id = ?1"
+            + " AND i.enabled = false " )
+    public List<Users> findAllSearchIdEnableFalse (String id);
 
 
 }
