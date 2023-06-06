@@ -17,6 +17,15 @@ public class UserService {
         return (List<Users>) repo.findAll();
     }
 
+    //Lấy tất cả danh sách từ bảng User có trường enable là true
+    public List<Users> listAllEnabledTrue() {
+        return (List<Users>) repo.findAllByEnabled(true);  //Trả về danh sách Users có enabled là true
+    }
+
+    //Lấy tất cả danh sách từ bảng User có trường enable là false
+    public List<Users> listAllEnabledFalse() {
+        return (List<Users>) repo.findAllByEnabled(false);  //Trả về danh sách Users có enabled là false
+    }
 
     //Hàm tìm kiếm theo tên gần giống, firstName và lastName và xuất ra danh sách, xem câu lệnh Query trong UserRepository
     public List<Users> findAllSearchName(String keyword) {
@@ -58,30 +67,13 @@ public class UserService {
         return (List<Users>) repo.findAll();
     }
 
-
-    //Lấy tất cả danh sách từ bảng User, dựa vào trường enabled là true thì mới xuất ra danh sách
-    public List<Users> listAllEnabledTrue() {
-        return (List<Users>) repo.findAllByEnabled(true);  //Trả về danh sách Users có enabled là true
+    //Hàm Save để sửa thông tin 1 User và lưu lại. Dùng cho Update và Delete tạm thời (cập nhập trường enable từ true thành false để ẩn khỏi danh sách Users có trường enable là false)
+    //Xem UserControllerBackEnd sẽ thấy được gọi hàm Save ở hàm @PutMapping (value="/users/{id}")
+    //Xem UserControllerFullStack sẽ thấy được gọi Save ở hàm @PostMapping("/ListUsers/update")
+    public Users save(Users Save){
+        Users save = repo.save(Save);
+        return save;
     }
-
-    public List<Users> listAllEnabledFalse() {
-        return (List<Users>) repo.findAllByEnabled(false);  //Trả về danh sách Users có enabled là false
-    }
-
-    //Hàm EditSave, sửa thông tin 1 user và lưu lại. Dùng cho update và delete tạm thời (cập nhập trường enable từ true thành false để ẩn khỏi danh sách users có trường enable là false)
-    //Xem UserControllerBackEnd sẽ thấy được gọi EditSave ở hàm @PutMapping (value="/users/{id}") ,Xem UserControllerFullStack sẽ thấy được gọi EditSave ở hàm @PostMapping("/ListUsers/update")
-    public Users EditSave(Users EditSave){
-        Users editSave = repo.save(EditSave);
-        return editSave;
-    }
-
-    /*
-    //Hàm save2 dùng cho hàm thêm mới 1 Users, Class Users2 bị ràng buộc id, id tự tăng theo stt. Tránh trường hợp dùng Postman gọi id bị trùng vào khiến nó update lại thay vì thêm mới.
-    public Users2 save2(Users2 AddNewUser){
-        Users2 addUser = repo2.save(AddNewUser);
-        return addUser;
-
-    }*/
 
     //Hàm saveNewUser, dùng để thêm 1 user mới, bị ràng buộc bởi hàm public boolean isValidationId.
     public Users saveNewUser (Users AddNewUser) throws UserNotFoundException {
@@ -93,7 +85,7 @@ public class UserService {
         throw new UserNotFoundException("Could not save this users with ID " + AddNewUser.getId()); //Thông báo lỗi: Không thể lưu users này với id là...
     }
 
-    // Hàm boolean xét đúng, sai.
+    //Hàm boolean xét đúng, sai.
     public boolean isValidationId(Users users) {
         if(users.getId() != null) {              //Không cho nhập id, tránh trường hợp dùng Postman nhập id đã có trong MySQL vào hàm thêm 1 user mới khiến nó update lại thay vì thêm 1 user mới.
             return false;
@@ -101,22 +93,10 @@ public class UserService {
        return true;
     }
 
-    //Test
-    /*
-    public Users save3(Users AddNewUser) throws UserNotFoundException{
-        Users save3 = repo.save(AddNewUser); //Tìm kiếm theo mã id
-
-        //Kiểm tra giá trị
-        if (save3.getId()!=null) {
-
-            return save3;
-        }
-        throw new UserNotFoundException("Could not find any users with ID " + save3.getId()); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
-    }*/
-
-    // Hàm tìm kiếm theo mã id user
-    // Xem trang lstUsersEnableTrue.html sẽ thấy đoạn code lấy đường dẫn lấy theo mã id User, edit. <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/edit/' + ${user.id}}" >Edit</a>
-    // UserController @GetMapping("/ListUsers/edit/{id}")
+    //Hàm tìm kiếm theo mã id user
+    //Xem trang lstUsersAll.html sẽ thấy đoạn code lấy đường dẫn theo mã id User
+    //<a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/update/' + ${user.id}}" > Edit </a>         <!-- Xem trong UserControllerFullStack hàm @GetMapping("/ListUsers/edit/{id}") -->
+    //<a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/delete/' + ${user.id}}" > Delete </a>       <!-- Xem trong UserControllerFullStack hàm @GetMapping("/ListUsers/delete/{id}") -->
     public Users searchID(Integer id) throws UserNotFoundException {
         Optional<Users> result = repo.findById(id); //Tìm kiếm theo mã id
         //Kiểm tra giá trị
@@ -137,28 +117,27 @@ public class UserService {
          repo.deleteById(id);
     }*/
 
-    //Hàm update
-    public Users editSave(Users user) throws UserNotFoundException {
+    //Hàm update, Postman.
+    public Users updateUser(Users user) throws UserNotFoundException {
         Optional<Users> result = repo.findById(user.getId()); //Tìm kiếm theo mã id
-
         //Kiểm tra giá trị
         if (result.isPresent()) {
-            Users updateUser = result.get();
+            Users update = result.get();
 
             //updateUser.setId(user.getId());
-            updateUser.setEmail(user.getEmail());
-            updateUser.setPassword(user.getPassword());
-            updateUser.setFirstName(user.getFirstName());
-            updateUser.setLastName(user.getLastName());
-            updateUser.setEnabled(user.isEnabled());
+            update.setEmail(user.getEmail());
+            update.setPassword(user.getPassword());
+            update.setFirstName(user.getFirstName());
+            update.setLastName(user.getLastName());
+            update.setEnabled(user.isEnabled());
 
-            Users EditSave = this.EditSave(updateUser);  //Chuyển đến hàm EditSave để lưu lại
-            return EditSave;
+            Users updateUser = this.save(update);  //Chuyển đến hàm EditSave để lưu lại
+            return updateUser;
         }
         throw new UserNotFoundException("Could not find any users with ID " + user.getId()); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
     }
 
-    //Hàm xoá tạm thời theo mã id user, cập nhật lại trường enabled từ true thành false để ẩn khỏi danh sách users.
+    //Hàm xoá tạm thời theo mã id user, cập nhật lại trường enabled từ true thành false để ẩn khỏi danh sách users có trường enable là true.
     //Xem UserControllerBackEnd sẽ thấy gọi hàm deleteEnabledTrue trong hàm @DeleteMapping ("/users/{id}")
     //Hàm này dùng Postman để kiểm tra api, tìm thấy mã id user thì tiến hành update lại thông tin mới.
     public Users deleteEnabledTrue(int id) throws UserNotFoundException {
@@ -166,17 +145,17 @@ public class UserService {
 
         //Kiểm tra giá trị
         if (result.isPresent()) {
-            result.get().setEnabled(false);                     //Cập nhật trường enabled thành false
+            result.get().setEnabled(false);                  //Cập nhật trường enabled thành false
 
-            Users EditSave = this.EditSave(result.get());       //Chuyển đến hàm EditSave để lưu lại
+            Users EditSave = this.save(result.get());       //Chuyển đến hàm Save để lưu lại
             return EditSave;
         }
         throw new UserNotFoundException("Could not find any users with ID " + id); //Xuất thông báo lỗi không tìm thấy bất kỳ users nào với id là...
     }
 
     //Hàm xoá tạm thời theo mã id user, cập nhật lại trường enabled từ true thành false để ẩn khỏi danh sách users.
-    //Xem UserControllerFullStack sẽ thấy gọi hàm deleteEnabledTrue2 trong hàm @DeleteMapping ("/users/{id}")
-    //Hàm này tương tự hàm EditSave, sử dụng trong trường hợp trả về trang web html, tìm thấy mã id user sẽ lấy thông tin users đưa lên user_form_Delete.html. Sau đó ở trong form nhấn nút Delete để xác nhận xoá tạm thời.
+    //Xem UserControllerFullStack sẽ thấy hàm @PostMapping("/ListUsers/delete")
+    //Hàm này tương tự hàm update, sử dụng trong trường hợp trả về trang web html, tìm thấy mã id user sẽ lấy thông tin user đưa lên user_form_Delete.html. Sau đó ở trong form nhấn nút Delete để xác nhận xoá tạm thời (Update trường enable từ true thành false).
     public Users deleteEnabledTrue2(Users user) throws UserNotFoundException {
         Optional<Users> result = repo.findById(user.getId()); //Tìm kiếm theo mã id
 
@@ -185,9 +164,26 @@ public class UserService {
             Users updateUser = result.get();
 
             //Trường enable của Class Users trong Database MySQL hiển thị số 1 là true, số 0 là false
-            updateUser.setEnabled(false);                   //Cập nhật lại trường enable trong Class Users từ true thành false. Thì trong danh sách Users nó sẽ bị ẩn thông tin có id đó và trong Database MySQL thì vẫn còn chứa thông tin users, không xoá luôn.
+            updateUser.setEnabled(false);                //Cập nhật lại trường enable trong Class Users từ true thành false. Thì trong danh sách Users có trường enable là true nó sẽ bị ẩn thông tin có id đó và trong Database MySQL thì vẫn còn chứa thông tin users, không xoá luôn.
 
-            Users EditSave = this.EditSave(updateUser);     //Chuyển đến hàm EditSave để lưu lại
+            Users EditSave = this.save(updateUser);     //Chuyển đến hàm Save để lưu lại
+            return EditSave;
+        }
+        throw new UserNotFoundException("Could not find any users with ID " + user.getId()); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
+    }
+
+    //Cập nhật trường enable từ false thành true
+    //Xem UserControllerFullStack sẽ thấy hàm @PostMapping("/ListUsers/updateEnable")
+    public Users updateEnableFalse(Users user) throws UserNotFoundException {
+        Optional<Users> result = repo.findById(user.getId()); //Tìm kiếm theo mã id
+        //Kiểm tra giá trị
+        if (result.isPresent()) {
+            Users updateUser = result.get();
+
+            //Trường enable của Class Users trong Database MySQL hiển thị số 1 là true, số 0 là false
+            updateUser.setEnabled(true);                 //Cập nhật lại trường enable trong Class Users từ false thành true. Trong danh sách Users có trường enable là false, cập nhật lại thành true thì tài khoản User đó sẽ khôi phục
+
+            Users EditSave = this.save(updateUser);     //Chuyển đến hàm Save để lưu lại
             return EditSave;
         }
         throw new UserNotFoundException("Could not find any users with ID " + user.getId()); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...

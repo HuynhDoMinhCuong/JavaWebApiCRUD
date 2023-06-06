@@ -11,43 +11,41 @@ import java.util.List;
 public interface UserRepository extends CrudRepository<Users, Integer> {
 
     //Dùng cho hàm xoá luôn, xem trong UserService
-    /*
     public Long countById (Integer id); //Độ dài giá trị đếm theo id
-    */
 
-    //
-    public List<Users> findAllByEnabled(boolean enabled);  //Tìm trường enabled trong Class User để xuất ra danh sách các users có enabled là true. Xem trong UserControllerFullStack, hàm  @GetMapping ("/ListUsers"). Và trong UserControllerBachEnd, hàm @GetMapping (value="/users")
+    //Xuất ra danh sách Users, dựa vào trường enable là true hoặc false
+    //Xem trong UserService sẽ thấy gọi hàm tìm kiếm danh sách dựa vào enable là true hoặc false
+    public List<Users> findAllByEnabled(boolean enabled);
 
-
-    // Hàm tìm kiếm theo họ, tên gần giống
+    //Hàm tìm kiếm theo họ, tên gần giống
     @Query ("SELECT n FROM Users n WHERE n.firstName LIKE %?1%"
                 + " OR n.lastName LIKE %?1%")
     public List<Users> findAllSearchName (String keyword);
 
-    //
+    //Hàm tìm kiếm theo id
     @Query ("SELECT i FROM Users i WHERE i.id = ?1")
     public List<Users> findAllSearchID (String id);
 
-    // Hàm tìm kiếm theo họ, tên gần giống, có trường enable là true = 1
+    //Hàm tìm kiếm theo họ, tên gần giống, có trường enable là true
     @Query ("SELECT n FROM Users n WHERE n.firstName LIKE %?1% "
             + " AND n.enabled = true"
             + " OR n.lastName LIKE %?1%"
             + " AND n.enabled = true" )
     public List<Users> findAllSearchNameEnableTrue (String keyword);
 
-    //Hàm tìm kiếm theo id cci1 enable là true
+    //Hàm tìm kiếm theo id có enable là true
     @Query ("SELECT i FROM Users i WHERE i.id = ?1"
             + " AND i.enabled = true" )
     public List<Users> findAllSearchIdEnableTrue (String id);
 
-    // Hàm tìm kiếm theo họ, tên gần giống, có trường enable là false = 0
+    //Hàm tìm kiếm theo họ, tên gần giống, có trường enable là false
     @Query ("SELECT n FROM Users n WHERE n.firstName LIKE %?1%"
             + " AND n.enabled = FALSE"
             + " OR n.lastName LIKE %?1%"
             + " AND n.enabled = false" )
     public List<Users> findAllSearchNameEnableFalse (String keyword);
 
-    //Hàm tìm kiếm theo id cci1 enable là false
+    //Hàm tìm kiếm theo id có enable là false
     @Query ("SELECT i FROM Users i WHERE i.id = ?1"
             + " AND i.enabled = false " )
     public List<Users> findAllSearchIdEnableFalse (String id);

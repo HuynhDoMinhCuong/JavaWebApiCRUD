@@ -8,9 +8,37 @@
 </head>
 
 <style>
+
   div.text-center{
     text-align: center;
   }
+  div.dialog{
+    background-color: aliceblue;
+    color: red;
+    position: fixed;
+    top:0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity linear 0.2s;
+  }
+  div.dialog:target{
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .btn {
+    text-align: center;   /* Canh chữ của button */
+    height:40px;
+    width:100px;
+  }
+
 </style>
 
 <body>
@@ -21,7 +49,7 @@
   <!-- Xem UserControllerFullStack hàm @GetMapping("/ListUsers/delete/{id}") -->
   <form th:action="@{/api/v1/ListUsers/delete}" method="post" th:object="${DeleteUser}"
         style="max-width: 500px; margin: 0 auto;">
-    <input type="hidden" th:field="*{id}"> <!-- Edit user theo mã id -->
+      <input type="hidden" th:field="*{id}"> <!-- Delete user theo mã id -->
     <div class="border border-secondary rounded p-3">
       <div class="form-group row">
         <label class="col-sm-4 col-form-label"> E-mail </label>

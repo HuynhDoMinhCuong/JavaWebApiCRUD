@@ -105,7 +105,6 @@
 </div>
 </form>
 
-
 <div class="container-fluid text-center">
     <div><h2>  </h2></div>
     <div class="m-2">
@@ -116,7 +115,8 @@
 
     <div th:if="${message}" class="alert alert-success text-center">
 
-        [[${message}]]     <!-- Hiển thị thông báo, hàm thông báo xem trong UserControler -->
+        [[${message}]]     <!-- Hiển thị thông báo, hàm thông báo xem trong UserControllerFullStack -->
+
     </div>
 
     <div>
@@ -142,8 +142,8 @@
                     <td>[[${user.lastName}]]</td>
                     <td>[[${user.enabled}]]</td>
                     <td>
-                        <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/update/' + ${user.id}}" >Edit</a>                 <!-- Xem trong UserControllerFullStack hàm @GetMapping("/ListUsers/edit/{id}") -->
-                        <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/delete/' + ${user.id}}" >Delete </a>             <!-- Xem trong UserControllerFullStack hàm @GetMapping("/ListUsers/delete/{id}") -->
+                        <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/update/' + ${user.id}}" > Edit </a>                 <!-- Xem trong UserControllerFullStack hàm @GetMapping("/ListUsers/edit/{id}") -->
+                        <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/delete/' + ${user.id}}" > Delete </a>             <!-- Xem trong UserControllerFullStack hàm @GetMapping("/ListUsers/delete/{id}") -->
                         <!--
                         <a class="dialog-btn h4 mr-3" href="#my-dialog-delete">Delete 02</a>
                         <div class="dialog overlay" id="my-dialog-delete">

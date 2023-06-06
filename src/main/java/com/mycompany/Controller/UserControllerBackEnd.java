@@ -7,7 +7,6 @@ import com.mycompany.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
 
 //@Controller     //Để xử lý các request, trả về trang
@@ -105,7 +104,7 @@ public class UserControllerBackEnd {
     public Users TestShowEditSaveForm(@RequestBody Users user, @PathVariable("id") Integer id) {
         try {
             user.setId(id);
-            return service.editSave(user);
+            return service.updateUser(user);
         } catch (UserNotFoundException e) {
 
             return user;

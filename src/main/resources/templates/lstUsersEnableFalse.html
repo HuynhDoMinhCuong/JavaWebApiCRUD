@@ -90,7 +90,7 @@
 
   <div th:if="${message}" class="alert alert-success text-center">
 
-    [[${message}]]     <!-- Hiển thị thông báo, hàm thông báo xem trong UserControler -->
+    [[${message}]]     <!-- Hiển thị thông báo, hàm thông báo xem trong UserControllerFullStack -->
   </div>
 
   <div>
@@ -108,7 +108,7 @@
       </thead>
 
       <tbody>
-      <th:block th:each="user : ${lstUsersEnableFalse}">   <!-- Tên "listUsers" đã đặt trong UserControllerFullStack, @GetMapping ("/ListUsers/Recover") -->
+      <th:block th:each="user : ${lstUsersEnableFalse}">   <!-- Tên "lstUsersEnableFalse" đã đặt trong UserControllerFullStack, @GetMapping ("/ListUsers/Recover") -->
         <tr>
           <td>[[${user.id}]]</td>
           <td>[[${user.email}]]</td>
@@ -116,8 +116,8 @@
           <td>[[${user.lastName}]]</td>
           <td>[[${user.enabled}]]</td>
           <td>
-            <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/editEnable/' + ${user.id}}" > Recover </a>            <!-- Xem trong UserControllerFullStack hàm @GetMapping("/ListUsers/editEnable/{id}") -->
-            <!-- <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/delete/' + ${user.id}}" >Delete </a> -->    <!-- Xem trong UserControllerFullStack hàm @GetMapping("/ListUsers/delete/{id}") -->
+            <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/updateEnable/' + ${user.id}}" > Recover </a>            <!-- Xem trong UserControllerFullStack hàm @GetMapping("/ListUsers/updateEnable/{id}") -->
+            <!-- <a class="h4 mr-3" th:href="@{'/api/v1/ListUsers/delete/' + ${user.id}}" >Delete </a> -->           <!-- Xem trong UserControllerFullStack hàm @GetMapping("/ListUsers/delete/{id}") -->
 
             <!--
             <a class="dialog-btn h4 mr-3" href="#my-dialog-delete">Delete 02</a>
