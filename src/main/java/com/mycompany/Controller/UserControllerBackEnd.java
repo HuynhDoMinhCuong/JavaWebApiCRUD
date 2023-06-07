@@ -5,6 +5,8 @@ import com.mycompany.entity.Users;
 import com.mycompany.user.UserNotFoundException;
 import com.mycompany.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,9 +59,24 @@ public class UserControllerBackEnd {
     }
 
     //Test Postman, xem danh sách các users có enabled là true
-    @GetMapping (value="/users")
-    public  List<Users> TestShowUserListEnabled() {
+    @GetMapping (value="/users/true")
+    public  List<Users> TestShowUserListEnabledTrue() {
         List<Users> listUsers = service.listAllEnabledTrue();
+
+        //  System.out.println("Id: " + user.getId());
+        //  System.out.println("Email: " + user.getEmail());
+        //  System.out.println("Password: " + user.getPassword());
+        //  System.out.println("First Name: " + user.getFirstName());
+        //  System.out.println("Last Name: " + user.getLastName());
+        //  System.out.println("Enabled: " + user.isEnabled());
+
+        return listUsers;
+    }
+
+    //Test Postman, xem danh sách các users có enabled là true
+    @GetMapping (value="/users/false")
+    public  List<Users> TestShowUserListEnabledFalse() {
+        List<Users> listUsers = service.listAllEnabledFalse();
 
         //  System.out.println("Id: " + user.getId());
         //  System.out.println("Email: " + user.getEmail());
@@ -121,6 +138,14 @@ public class UserControllerBackEnd {
             "enabled": true
     } */
 
+    //Test Postman, tìm kiếm theo tên gần đúng (first name và last name)
+    @GetMapping(value="/users/search/{name}")
+    public List<Users> TestShowSearchName(@PathVariable("name") String name) {
+        List<Users> listUsers = service.findAllSearchName(name);
+        return listUsers;
+    }
+
+
     //Test Postman delete, xoá luôn
     /*
     @DeleteMapping (value="/test-users/{id}")
@@ -142,7 +167,7 @@ public class UserControllerBackEnd {
 
     //Test Postman delete, xoá tạm thời, cập nhật enable true thành false để ẩn khỏi danh sách các users có enabled là true mới được hiển thị.
     @DeleteMapping ("/users/{id}")
-    public String TestDeleteUserEnabled(@PathVariable("id") Integer id) {
+    public String TestDeleteUserEnabledTrue(@PathVariable("id") Integer id) {
         try {
             service.deleteEnabledTrue(id);   //Cập nhật lại enable true thành false để ẩn khỏi danh sách các users có enabled là true, xem hàm trong UserService
             return "Delete success";
@@ -151,5 +176,18 @@ public class UserControllerBackEnd {
             return e.getMessage();
         }
     }
+
+    //Test Postman khôi phục xoá tạm thời, cập nhật enable true thành false
+    @GetMapping ("/users/recover/{id}")
+    public String TestUpdateUserEnabledFalse(@PathVariable("id") Integer id) {
+        try {
+            service.updateEnableFalse(id);   //Cập nhật lại enable false thành true, xem hàm trong UserService
+            return "Recover success";
+        } catch (UserNotFoundException e) {
+
+            return e.getMessage();
+        }
+    }
+
 
 }

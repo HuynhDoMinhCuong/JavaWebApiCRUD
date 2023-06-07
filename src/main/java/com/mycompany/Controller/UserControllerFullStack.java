@@ -22,13 +22,14 @@ public class UserControllerFullStack {
     //Read: dùng GET method
     //Danh sách các users
     @GetMapping ("/ListUsers/All")        //Đặt tên đường dẫn, viết lại đường dẫn ở trang index.html sẽ thấy đường dẫn th:href="@{/ListUsers/All}">
-    public String showUserListAll(Model model, @Param("keyword") String keyword, @Param("id") Integer id) throws UserNotFoundException {
+    public String showUserListAll(Model model, @Param("keyword") String keyword, @Param("id") String id) throws UserNotFoundException {
         if (keyword != null){
             List<Users> listUsers = service.findAllSearchName(keyword); //Lấy danh sách tất cả các Users
             model.addAttribute("listUsersAll", listUsers);    //Viết lại "listUsersAll" đã đặt trong trang lstUsersAll.html     <th:block th:each="user : ${listUsersAll}">
         }
-        else if (id != null && id >0){
-            Users listUsers = service.searchID(id); //
+        else if (id != null){
+            List<Users> listUsers = service.findAllSearchId(id); //Lấy danh sách tất cả các Users
+            //Users listUsers = service.searchID(id); //
             model.addAttribute("listUsersAll", listUsers);    //Viết lại "listUsersAll" đã đặt trong trang lstUsersAll.html     <th:block th:each="user : ${listUsersAll}">
         }
         else {
@@ -143,7 +144,7 @@ public class UserControllerFullStack {
     //Hàm dẫn đường dẫn đến trang lstUsersEnableFalse.html
     @PostMapping("/ListUsers/updateEnable") //Đặt tên đường dẫn, viết lại đường dẫn trang users_form_Update_Enabled.html sẽ thấy đường dẫn th:action="@{/ListUsers/updateEnable}" method="post" th:object="${EditUser}"
     public String updateUserEnable (Users EditUser, RedirectAttributes ra) throws UserNotFoundException {
-        service.updateEnableFalse(EditUser); //Lấy thông tin user theo mã id, khi người dùng nhấn vào edit hoặc delete trong danh sách user_form_Update.html
+        service.updateEnableFalse2(EditUser); //Lấy thông tin user theo mã id, khi người dùng nhấn vào edit hoặc delete trong danh sách user_form_Update.html
         System.out.println("Hello: " + EditUser.getFirstName());
         ra.addFlashAttribute("message", "The user has been update successfully"); //Đưa ra thông báo khi lưu thông tin người dùng thành công, xem lstUsersEnableTrue.html sẽ thấy khai báo [[${message}]] hiển thị thông báo
         return "redirect:/api/v1/ListUsers/Recover"; //Trả về đường dẫn @GetMapping ("/ListUsers/Recover"), trang lstUsersEnableFalse.html

@@ -40,13 +40,21 @@ public class UserService {
         if (keyword != null) {
             return repo.findAllSearchNameEnableTrue(keyword);
         }
-        return (List<Users>) repo.findAll();
+        return (List<Users>) repo.findAllByEnabled(true);
     }
 
     //Hàm tìm kiếm theo tên gần giống, firstName và lastName, có enable là false và xuất ra danh sách, xem câu lệnh Query trong UserRepository
     public List<Users> findAllSearchNameEnableFalse(String keyword) {
         if (keyword != null) {
             return repo.findAllSearchNameEnableFalse(keyword);
+        }
+        return (List<Users>) repo.findAllByEnabled(false);
+    }
+
+    //Hàm tìm kiếm theo id
+    public List<Users> findAllSearchId(String id) {
+        if (id != null) {
+            return repo.findAllSearchID(id);
         }
         return (List<Users>) repo.findAll();
     }
@@ -56,7 +64,7 @@ public class UserService {
         if (id != null) {
             return repo.findAllSearchIdEnableTrue(id);
         }
-        return (List<Users>) repo.findAll();
+        return (List<Users>) repo.findAllByEnabled(true);
     }
 
     //Hàm tìm kiếm theo id, có enable là false và xuất ra danh sách, xem câu lệnh Query trong UserRepository
@@ -64,7 +72,7 @@ public class UserService {
         if (id != null) {
             return repo.findAllSearchIdEnableFalse(id);
         }
-        return (List<Users>) repo.findAll();
+        return (List<Users>) repo.findAllByEnabled(false);
     }
 
     //Hàm Save để sửa thông tin 1 User và lưu lại. Dùng cho Update và Delete tạm thời (cập nhập trường enable từ true thành false để ẩn khỏi danh sách Users có trường enable là false)
@@ -172,9 +180,26 @@ public class UserService {
         throw new UserNotFoundException("Could not find any users with ID " + user.getId()); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
     }
 
+
+    //
+    public Users updateEnableFalse(int id) throws UserNotFoundException {
+        Optional<Users> result = repo.findById(id); //Tìm kiếm theo mã id
+        //Kiểm tra giá trị
+        if (result.isPresent()) {
+            Users updateUser = result.get();
+
+            //Trường enable của Class Users trong Database MySQL hiển thị số 1 là true, số 0 là false
+            updateUser.setEnabled(true);                 //Cập nhật lại trường enable trong Class Users từ false thành true. Trong danh sách Users có trường enable là false, cập nhật lại thành true thì tài khoản User đó sẽ khôi phục
+
+            Users EditSave = this.save(updateUser);     //Chuyển đến hàm Save để lưu lại
+            return EditSave;
+        }
+        throw new UserNotFoundException("Could not find any users with ID " + id); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
+    }
+
     //Cập nhật trường enable từ false thành true
     //Xem UserControllerFullStack sẽ thấy hàm @PostMapping("/ListUsers/updateEnable")
-    public Users updateEnableFalse(Users user) throws UserNotFoundException {
+    public Users updateEnableFalse2(Users user) throws UserNotFoundException {
         Optional<Users> result = repo.findById(user.getId()); //Tìm kiếm theo mã id
         //Kiểm tra giá trị
         if (result.isPresent()) {
