@@ -45,9 +45,9 @@
 <div class="container-fluid">
   <div class="text-center"><h2>[[${pageTitle}]]</h2></div>
 
-  <!-- Xem UserControllerFullStack hàm @PostMapping("/ListUsers/update") -->
-  <!-- Xem UserControllerFullStack hàm @GetMapping ("/ListUsers/EditUser") -->
-  <form th:action="@{/api/v1/ListUsers/update}" method="post" th:object="${EditUser}"
+  <!-- Xem UserControllerFullStack hàm @PostMapping("/list-users/update") -->
+  <!-- Xem UserControllerFullStack hàm @GetMapping ("/list-users/update/{id}") -->
+  <form th:action="@{/api/v1/list-users/update}" method="post" th:object="${EditUser}"
         style="max-width: 500px; margin: 0 auto;">
     <input type="hidden" th:field="*{id}"> <!-- Edit user theo mã id -->
     <div class="border border-secondary rounded p-3">
@@ -99,8 +99,8 @@
 </div>
 
 <script type="text/javascript">
-  function cancelForm() {
-    window.location = "[[@{/api/v1/ListUsers/All}]]";
+  function cancelForm() {                             <!-- Trả về trang lstUsersAll.html-->
+    window.location = "[[@{/api/v1/list-users/all}]]";
   }
 </script>
 

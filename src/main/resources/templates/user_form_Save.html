@@ -45,9 +45,9 @@
 <div class="container-fluid">
   <div class="text-center"><h2>[[${pageTitle}]]</h2></div>
 
-  <!-- Xem UserControllerFullStack hàm @PostMapping("/ListUsers/save") -->
-  <!-- Xem UserControllerFullStack hàm @GetMapping ("/ListUsers/AddNewUser") -->
- <form th:action="@{/api/v1/ListUsers/save}" method="post" th:object="${AddNewUser}"
+  <!-- Xem UserControllerFullStack hàm @PostMapping("/list-users/save") -->
+  <!-- Xem UserControllerFullStack hàm @GetMapping ("/list-users/add-new-user") -->
+ <form th:action="@{/api/v1/list-users/save}" method="post" th:object="${AddNewUser}"
        style="max-width: 500px; margin: 0 auto;">
    <input type="hidden" th:field="*{id}">
     <div class="border border-secondary rounded p-3">
@@ -102,8 +102,8 @@
 </div>
 
 <script type="text/javascript">
-  function cancelForm() {
-    window.location = "[[@{/api/v1/ListUsers/All}]]";
+  function cancelForm() {                             <!-- Trả về trang lstUsersAll.html-->
+    window.location = "[[@{/api/v1/list-users/all}]]";
   }
 </script>
 

@@ -45,9 +45,9 @@
 <div class="container-fluid">
   <div class="text-center"><h2>[[${pageTitle}]]</h2></div>
 
-  <!-- Xem UserControllerFullStack hàm @PostMapping("/ListUsers/delete") -->
-  <!-- Xem UserControllerFullStack hàm @GetMapping("/ListUsers/delete/{id}") -->
-  <form th:action="@{/api/v1/ListUsers/delete}" method="post" th:object="${DeleteUser}"
+  <!-- Xem UserControllerFullStack hàm @PostMapping("/list-users/delete") -->
+  <!-- Xem UserControllerFullStack hàm @GetMapping("/list-users/delete/{id}") -->
+  <form th:action="@{/api/v1/list-users/delete}" method="post" th:object="${DeleteUser}"
         style="max-width: 500px; margin: 0 auto;">
       <input type="hidden" th:field="*{id}"> <!-- Delete user theo mã id -->
     <div class="border border-secondary rounded p-3">
@@ -88,8 +88,8 @@
 </div>
 
 <script type="text/javascript">
-  function cancelForm() {                           <!-- Trả về trang lstUsersEnableTrue.html-->
-    window.location = "[[@{/api/v1/ListUsers/Online}]]";
+  function cancelForm() {                                <!-- Trả về trang lstUsersEnabledTrue.html-->
+    window.location = "[[@{/api/v1/list-users/online}]]";
   }
 </script>
 

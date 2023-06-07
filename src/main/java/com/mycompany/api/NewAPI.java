@@ -10,7 +10,6 @@ public class NewAPI {
 
     //@ResponseBody
 
-
     //Lấy ra danh sách
     //UserDTO chỉ là class truyền và nhận dữ liệu, không lưu vào MySQL
     //Dùng công cụ Postman để test các api
