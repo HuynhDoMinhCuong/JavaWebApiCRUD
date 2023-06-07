@@ -191,7 +191,7 @@ public class UserControllerFullStack {
         } catch (UserNotFoundException e) {
             ra.addFlashAttribute("message", e.getMessage()); //e.getMessage sẽ lấy thông báo từ UserService của hàm delete.Thông báo lỗi, thông báo sẽ hiển thị ở trang danh sách users, lstUsersEnableTrue.html
         }
-        return "redirect:/api/v1/ListUsers/All"; //Trả về đường dẫn @GetMapping ("/ListUsers/enabled"), trang lstUsersEnableTrue.html
+        return "redirect:/api/v1/ListUsers/Online"; //Trả về đường dẫn @GetMapping ("/ListUsers/enabled"), trang lstUsersEnableTrue.html
     }
 
     @GetMapping("/ListUsers/All/{id}") //Đặt tên đường dẫn, viết lại đường dẫn trang lstUsersAll.html, đoạn code edit và delete theo mã id, th:href="@{'/ListUsers/All/' + ${user.id}}"
