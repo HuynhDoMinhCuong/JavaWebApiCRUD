@@ -144,7 +144,7 @@ public class UserControllerFullStack {
     public String updateUserEnable (Users EditUser, RedirectAttributes ra) throws UserNotFoundException {
         service.updateEnableFalse2(EditUser);
         System.out.println("Hello: " + EditUser.getFirstName());
-        ra.addFlashAttribute("message", "The user has been recover successfully"); //Đưa ra thông báo khi khôi phục thông tin người dùng thành công, xem lstUsersEnabledTrue.html sẽ thấy khai báo [[${message}]] hiển thị thông báo
+        ra.addFlashAttribute("message", "The user has been recover successfully"); //Đưa ra thông báo khi khôi phục0 thông tin người dùng thành công, xem lstUsersEnabledTrue.html sẽ thấy khai báo [[${message}]] hiển thị thông báo
         return "redirect:/api/v1/list-users/recover"; //Trả về đường dẫn @GetMapping ("/ListUsers/Recover"), trang lstUsersEnabledFalse.html
     }
 
