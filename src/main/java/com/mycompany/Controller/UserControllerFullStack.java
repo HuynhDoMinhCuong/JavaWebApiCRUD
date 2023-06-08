@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller     //Để xử lý các request, trả về trang html
 //@RestController   //Xây dựng các RESTful API
@@ -22,39 +23,39 @@ public class UserControllerFullStack {
     //Read: dùng GET method
     //Danh sách các users
     @GetMapping ("/list-users/all")        //Đặt tên đường dẫn, viết lại đường dẫn ở trang index.html sẽ thấy đường dẫn th:href="@{/list-users/all}">
-    public String showUserListAll(Model model, @Param("keyword") String keyword, @Param("id") String id) throws UserNotFoundException {
+    public String showUserListAll(Model model, @Param("keyword") String keyword, @Param("id") Integer id) throws UserNotFoundException {
         if (keyword != null){
-            List<Users> listUsers = service.findAllSearchName(keyword); //Tìm kiếm Users theo tên gần giống
-            model.addAttribute("listUsersAll", listUsers);    //Viết lại "listUsersAll" đã đặt trong trang lstUsersAll.html     <th:block th:each="user : ${listUsersAll}">
+            List<Users> listUsers = service.findAllSearchName(keyword);          //Tìm kiếm Users theo tên gần giống
+            model.addAttribute("listUsersAll", listUsers);           //Viết lại "listUsersAll" đã đặt trong trang lstUsersAll.html     <th:block th:each="user : ${listUsersAll}">
         }
         else if (id != null){
             List<Users> listUsers = service.findAllSearchId(id); //Tìm kiếm Users theo mã id
             //Users listUsers = service.searchID(id); //
-            model.addAttribute("listUsersAll", listUsers);    //Viết lại "listUsersAll" đã đặt trong trang lstUsersAll.html     <th:block th:each="user : ${listUsersAll}">
+            model.addAttribute("listUsersAll", listUsers);          //Viết lại "listUsersAll" đã đặt trong trang lstUsersAll.html     <th:block th:each="user : ${listUsersAll}">
         }
         else {
             List<Users> listUsersAll = service.listAll(); //Lấy danh sách tất cả các Users
-            model.addAttribute("listUsersAll", listUsersAll);
+            model.addAttribute("listUsersAll", listUsersAll);      //Viết lại "listUsersAll" đã đặt trong trang lstUsersAll.html     <th:block th:each="user : ${listUsersAll}">
         }
-        System.out.println("User Controller");
         return "lstUsersAll"; //Trả về trang lstUsersAll.html
     }
 
     //Read: dùng GET method
     //Danh sách các users có trường enabled là true
     @GetMapping ("/list-users/online")        //Đặt tên đường dẫn, viết lại đường dẫn ở trang index.html sẽ thấy đường dẫn th:href="@{/list-users/online}">
-    public String showUserListTrue(Model model, @Param("keyword") String keyword, @Param("id") String id) throws UserNotFoundException{
+    public String showUserListTrue(Model model, @Param("keyword") String keyword, @Param("id") Integer id, RedirectAttributes ra) throws UserNotFoundException{
         if (keyword != null){
-            List<Users> listUsers = service.findAllSearchNameEnableTrue(keyword); //Tìm kiếm Users theo tên gần giống có enabled là true
-            model.addAttribute("lstUsersEnableTrue", listUsers);    //Viết lại "lstUsersEnableTrue" đã đặt trong trang lstUsersEnabledTrue.html     <th:block th:each="user : ${lstUsersEnableTrue}">
+            List<Users> listUsers = service.findAllSearchNameEnabledTrue(keyword); //Tìm kiếm Users theo tên gần giống có enabled là true
+            model.addAttribute("lstUsersEnableTrue", listUsers);       //Viết lại "lstUsersEnableTrue" đã đặt trong trang lstUsersEnabledTrue.html     <th:block th:each="user : ${lstUsersEnableTrue}">
         }
         else if (id != null){
-            List<Users> listUsers = service.findAllSearchIdEnableTrue(id); //Tìm kiếm Users theo mã id có enabled là true
-            model.addAttribute("lstUsersEnableTrue", listUsers);    //Viết lại "listUsersAll" đã đặt trong trang lstUsersAll.html     <th:block th:each="user : ${listUsersAll}">
+            List <Users> listUsers = service.findAllSearchIdEnabledTrue(id);      //Tìm kiếm Users theo mã id có enabled là true
+            model.addAttribute("lstUsersEnableTrue", listUsers);      //Viết lại "lstUsersEnableTrue" đã đặt trong trang lstUsersEnabledTrue.html     <th:block th:each="user : ${lstUsersEnableTrue}">
         }
-        else {
-            List<Users> listUsersEnabledTrue = service.listAllEnabledTrue(); //Lấy danh sách tất cả các Users có enabled là true
-            model.addAttribute("lstUsersEnableTrue", listUsersEnabledTrue);
+        else
+        {
+            List<Users> listUsersEnabledTrue = service.listAllEnabledTrue();            //Lấy danh sách tất cả các Users có enabled là true
+            model.addAttribute("lstUsersEnableTrue", listUsersEnabledTrue); //Viết lại "lstUsersEnableTrue" đã đặt trong trang lstUsersEnabledTrue.html     <th:block th:each="user : ${lstUsersEnableTrue}">
         }
         System.out.println("User Controller");
         return "lstUsersEnabledTrue"; //Trả về trang lstUsersEnabledTrue.html
@@ -63,18 +64,18 @@ public class UserControllerFullStack {
     //Read: dùng GET method
     //Danh sách các users ó trường enabled là false
     @GetMapping ("/list-users/recover")        //Đặt tên đường dẫn, viết lại đường dẫn ở trang index.html sẽ thấy đường dẫn <a class="h2" th:href="@{/api/v1/list-users/recover}"> Recover Deleted Users </a>
-    public String showUserListFalse(Model model, @Param("keyword") String keyword, @Param("id") String id) throws UserNotFoundException{
+    public String showUserListFalse(Model model, @Param("keyword") String keyword, @Param("id") Integer id) throws UserNotFoundException{
         if (keyword != null){
-            List<Users> listUsers = service.findAllSearchNameEnableFalse(keyword); //Tìm kiếm Users theo tên gần giống có enabled là false
+            List<Users> listUsers = service.findAllSearchNameEnabledFalse(keyword); //Tìm kiếm Users theo tên gần giống có enabled là false
             model.addAttribute("lstUsersEnableFalse", listUsers);    //Viết lại "lstUsersEnableFalse" đã đặt trong trang lstUsersEnabledFalse.html     <th:block th:each="user : ${lstUsersEnableFalse}">
         }
         else if (id != null){
-            List<Users> listUsers = service.findAllSearchIdEnableFlase(id); //Tìm kiếm Users theo mã id có enabled là false
-            model.addAttribute("lstUsersEnableFalse", listUsers);    //Viết lại "listUsersAll" đã đặt trong trang lstUsersAll.html     <th:block th:each="user : ${listUsersAll}">
+            List <Users> listUsers = service.findAllSearchIdEnabledFalse(id);    //Tìm kiếm Users theo mã id có enabled là false
+            model.addAttribute("lstUsersEnableFalse", listUsers);    //Viết lại "lstUsersEnableFalse" đã đặt trong trang lstUsersEnabledFalse.html     <th:block th:each="user : ${lstUsersEnableFalse}">
         }
-        else {
-            List<Users> listUsersEnabledFalse = service.listAllEnabledFalse(); //Lấy danh sách tất cả các Users có enable là false
-            model.addAttribute("lstUsersEnableFalse", listUsersEnabledFalse);
+        else{
+            List<Users> listUsersEnabledFalse = service.listAllEnabledFalse();             //Lấy danh sách tất cả các Users có enable là false
+            model.addAttribute("lstUsersEnableFalse", listUsersEnabledFalse);  //Viết lại "lstUsersEnableFalse" đã đặt trong trang lstUsersEnabledFalse.html     <th:block th:each="user : ${lstUsersEnableFalse}">
         }
         System.out.println("User Controller");
         return "lstUsersEnabledFalse"; //Trả về trang lstUsersEnabledFalse.html

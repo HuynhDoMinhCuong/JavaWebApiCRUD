@@ -3,7 +3,6 @@ package com.mycompany.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-
 //Dùng cho hàm tìm kiếm theo id, update, delete
 @Data
 @Entity
@@ -28,6 +27,5 @@ public class Users {
 
     @Column(name = "enabled")
     private boolean enabled = true; //Mặc định khi khởi tạo là true = 1
-
 
 }

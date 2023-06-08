@@ -3,7 +3,6 @@ package com.mycompany.user;
 import com.mycompany.entity.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,41 +36,41 @@ public class UserService {
     }
 
     //Hàm tìm kiếm theo tên gần giống, firstName và lastName, có enable là true và xuất ra danh sách, xem câu lệnh Query trong UserRepository
-    public List<Users> findAllSearchNameEnableTrue(String keyword) {
+    public List<Users> findAllSearchNameEnabledTrue(String keyword) {
         if (keyword != null) {
-            return repo.findAllSearchNameEnableTrue(keyword);
+            return repo.findAllSearchNameEnabledTrue(keyword);
         }
         return (List<Users>) repo.findAllByEnabled(true);
     }
 
     //Hàm tìm kiếm theo tên gần giống, firstName và lastName, có enable là false và xuất ra danh sách, xem câu lệnh Query trong UserRepository
-    public List<Users> findAllSearchNameEnableFalse(String keyword) {
+    public List<Users> findAllSearchNameEnabledFalse(String keyword) {
         if (keyword != null) {
-            return repo.findAllSearchNameEnableFalse(keyword);
+            return repo.findAllSearchNameEnabledFalse(keyword);
         }
         return (List<Users>) repo.findAllByEnabled(false);
     }
 
     //Hàm tìm kiếm theo id
-    public List<Users> findAllSearchId(String id) {
+    public List<Users> findAllSearchId(Integer id) {
         if (id != null) {
-            return repo.findAllSearchID(id);
+            return repo.findAllSearchID(id); //Tìm kiếm theo mã id
         }
         return (List<Users>) repo.findAll();
     }
 
     //Hàm tìm kiếm theo id, có enable là true và xuất ra danh sách, xem câu lệnh Query trong UserRepository
-    public List<Users> findAllSearchIdEnableTrue(String id) {
+    public List<Users> findAllSearchIdEnabledTrue(Integer id) {
         if (id != null) {
-            return repo.findAllSearchIdEnableTrue(id);
+            return repo.findAllSearchIdEnabledTrue(id); //Tìm kiếm theo mã id có enabled là true
         }
         return (List<Users>) repo.findAllByEnabled(true);
     }
 
     //Hàm tìm kiếm theo id, có enable là false và xuất ra danh sách, xem câu lệnh Query trong UserRepository
-    public List<Users> findAllSearchIdEnableFlase(String id) {
+    public List<Users> findAllSearchIdEnabledFalse(Integer id) {
         if (id != null) {
-            return repo.findAllSearchIdEnableFalse(id);
+            return repo.findAllSearchIdEnabledFalse(id); //Tìm kiếm theo mã id có enabled là false
         }
         return (List<Users>) repo.findAllByEnabled(false);
     }
@@ -181,7 +180,6 @@ public class UserService {
         throw new UserNotFoundException("Could not find any users with ID " + user.getId()); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
     }
 
-
     //
     public Users updateEnableFalse(int id) throws UserNotFoundException {
         Optional<Users> result = repo.findById(id); //Tìm kiếm theo mã id
@@ -214,6 +212,5 @@ public class UserService {
         }
         throw new UserNotFoundException("Could not find any users with ID " + user.getId()); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
     }
-    
 
 }

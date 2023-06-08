@@ -145,7 +145,6 @@ public class UserControllerBackEnd {
         return listUsers;
     }
 
-
     //Test Postman delete, xoá luôn
     /*
     @DeleteMapping (value="/test-users/{id}")

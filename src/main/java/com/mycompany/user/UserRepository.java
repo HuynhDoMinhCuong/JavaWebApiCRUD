@@ -4,6 +4,7 @@ import com.mycompany.entity.Users;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import java.util.List;
+import java.util.Optional;
 
 //Từ Class User, có khoá chính là ID, kiểu dữ liệu Integer
 //CrudRepository có các hàm save, findById, delete
@@ -24,31 +25,30 @@ public interface UserRepository extends CrudRepository<Users, Integer> {
 
     //Hàm tìm kiếm theo id
     @Query ("SELECT i FROM Users i WHERE i.id = ?1")
-    public List<Users> findAllSearchID (String id);
+    public List<Users> findAllSearchID (Integer id);
 
     //Hàm tìm kiếm theo họ, tên gần giống, có trường enable là true
     @Query ("SELECT n FROM Users n WHERE n.firstName LIKE %?1% "
             + " AND n.enabled = true"
             + " OR n.lastName LIKE %?1%"
             + " AND n.enabled = true" )
-    public List<Users> findAllSearchNameEnableTrue (String keyword);
+    public List<Users> findAllSearchNameEnabledTrue (String keyword);
 
     //Hàm tìm kiếm theo id có enable là true
     @Query ("SELECT i FROM Users i WHERE i.id = ?1"
             + " AND i.enabled = true" )
-    public List<Users> findAllSearchIdEnableTrue (String id);
+    public List<Users> findAllSearchIdEnabledTrue (Integer id);
 
     //Hàm tìm kiếm theo họ, tên gần giống, có trường enable là false
     @Query ("SELECT n FROM Users n WHERE n.firstName LIKE %?1%"
             + " AND n.enabled = FALSE"
             + " OR n.lastName LIKE %?1%"
             + " AND n.enabled = false" )
-    public List<Users> findAllSearchNameEnableFalse (String keyword);
+    public List<Users> findAllSearchNameEnabledFalse (String keyword);
 
     //Hàm tìm kiếm theo id có enable là false
     @Query ("SELECT i FROM Users i WHERE i.id = ?1"
             + " AND i.enabled = false " )
-    public List<Users> findAllSearchIdEnableFalse (String id);
-
+    public List<Users> findAllSearchIdEnabledFalse (Integer id);
 
 }
