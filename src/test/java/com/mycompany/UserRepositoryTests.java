@@ -1,6 +1,7 @@
 package com.mycompany;
 
 import com.mycompany.entity.Users;
+import com.mycompany.user.UserNotFoundException;
 import com.mycompany.user.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ public class UserRepositoryTests {
     @Autowired private UserRepository repo;
 
     @Test //Hàm thêm
-    public void testAddNew(){
+    public void testAddNew() throws UserNotFoundException {
         Users user = new Users();
         user.setEmail("admin2.gmail.com");
         user.setPassword("123456");

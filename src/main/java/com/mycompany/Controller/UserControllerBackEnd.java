@@ -3,13 +3,17 @@ package com.mycompany.Controller;
 import com.mycompany.dto.UsersDTO;
 import com.mycompany.entity.Users;
 import com.mycompany.user.UserNotFoundException;
+import com.mycompany.user.UserRepository;
 import com.mycompany.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 //@Controller     //Để xử lý các request, trả về trang
 @RestController   //Xây dựng các RESTful API
@@ -90,8 +94,23 @@ public class UserControllerBackEnd {
 
     //Test Postman, thêm 1 user mới
     @PostMapping (value="/users")
-    public Users TestCreateUser(@RequestBody Users AddNewUser) throws UserNotFoundException{
-            return service.saveNewUser(AddNewUser);
+    public Object TestCreateUser(@Validated @RequestBody Users AddNewUser) throws UserNotFoundException{
+
+        if(AddNewUser.getEmail().isEmpty() || AddNewUser.getPassword().isEmpty() || AddNewUser.getFirstName().isEmpty() || AddNewUser.getLastName().isEmpty()) {
+            return "Please enter full information";
+        }
+
+        else {
+            try {
+                return service.saveNewUser(AddNewUser);
+
+            } catch (UserNotFoundException e) {
+
+                return e.getMessage();
+            }
+
+        }
+
     }
 
     /*
@@ -188,5 +207,31 @@ public class UserControllerBackEnd {
         }
     }
 
+
+    //Test Postman tìm kiếm thông tin user theo mã id có trường enable là true
+    @GetMapping(value="/users/enabled-true/{id}")
+    public Object TestShowSearchIdTrue(@PathVariable("id") Integer id) {
+        return service.findAllSearchIdEnabledTrue(id);
+    }
+
+    //Test Postman tìm kiếm thông tin user theo mã id có trường enable là false
+    @GetMapping(value="/users/enabled-false/{id}")
+    public Object TestShowSearchIdFalse(@PathVariable("id") Integer id) {
+        return service.findAllSearchIdEnabledFalse(id);
+    }
+
+    //Test Postman, tìm kiếm theo tên gần đúng (first name và last name) có trường enable là true
+    @GetMapping(value="/users/enabled-true/name/{name}")
+    public List<Users> TestShowSearchNameTrue(@PathVariable("name") String name) {
+        List<Users> listUsers = service.findAllSearchNameEnabledTrue(name);
+        return listUsers;
+    }
+
+    //Test Postman, tìm kiếm theo tên gần đúng (first name và last name) có trường enable là false
+    @GetMapping(value="/users/enabled-false/name/{name}")
+    public List<Users> TestShowSearchNameFalse(@PathVariable("name") String name) {
+        List<Users> listUsers = service.findAllSearchNameEnabledFalse(name);
+        return listUsers;
+    }
 
 }

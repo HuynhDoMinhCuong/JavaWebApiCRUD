@@ -3,6 +3,8 @@ package com.mycompany.user;
 import com.mycompany.entity.Users;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -50,5 +52,10 @@ public interface UserRepository extends CrudRepository<Users, Integer> {
     @Query ("SELECT i FROM Users i WHERE i.id = ?1"
             + " AND i.enabled = false " )
     public List<Users> findAllSearchIdEnabledFalse (Integer id);
+
+
+    //Hàm tìm kiếm email
+    @Query ("SELECT n FROM Users n WHERE n.email =?1")
+    public List<Users> findAllSearchEmail (String keyword);
 
 }

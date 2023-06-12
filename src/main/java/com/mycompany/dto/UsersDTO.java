@@ -2,6 +2,8 @@ package com.mycompany.dto;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
 public class UsersDTO {
     private Integer id;

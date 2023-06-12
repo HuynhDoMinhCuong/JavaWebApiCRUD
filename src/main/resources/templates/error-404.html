@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Error-404</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" />
+  <!--<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" /> -->
+</head>
+
+<style>
+  div.text-center{
+    text-align: center;
+  }
+  div.dialog{
+    background-color: aliceblue;
+    color: red;
+    position: fixed;
+    top:0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity linear 0.2s;
+  }
+  div.dialog:target{
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .btn {
+    text-align: center;
+    height:40px;
+    width:100px;
+  }
+</style>
+
+<body>
+<div class="container-fluid text-center">
+  <div class="text-center"><h1>Something went wrong 404!</h1></div>
+  <div class="text-center"><h2>Our Engineers are on it</h2></div>
+
+  <div class="container-fluid text-center">
+    <div><h2>  </h2></div>
+    <div class="m-2">
+      <!--<a class="h3" th:href="@{/api/v1/list-users/add-new-user}"> Add new user </a> --><!-- Đường dẫn thêm 1 user mới -->
+      <!--<a class="h3"> || </a>-->
+      <a class="h3" th:href="@{/}"> Back to home </a> <!-- Trở lại trang chủ -->
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+</script>
+
+<!--
+<script src ="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src ="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
+</body>
+</html>

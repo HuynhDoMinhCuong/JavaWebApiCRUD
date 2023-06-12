@@ -1,5 +1,6 @@
 package com.mycompany.user;
 
+import com.mycompany.dto.UsersDTO;
 import com.mycompany.entity.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,19 +85,43 @@ public class UserService {
     }
 
     //Hàm saveNewUser, dùng để thêm 1 user mới, bị ràng buộc bởi hàm public boolean isValidationId.
-    public Users saveNewUser (Users AddNewUser) throws UserNotFoundException {
-
+    public Object saveNewUser (Users AddNewUser) throws UserNotFoundException {
         if(isValidationId(AddNewUser)) {
             Users addUser = repo.save(AddNewUser);
             return addUser;
         }
-        throw new UserNotFoundException("Could not save this users with ID " + AddNewUser.getId()); //Thông báo lỗi: Không thể lưu users này với id là...
+        throw new UserNotFoundException(" Do not enter ID: " + AddNewUser.getId()); //Thông báo lỗi:
+
+       /* if(isValidationId(AddNewUser)){
+            Users addUser = repo.save(AddNewUser);
+            return addUser;
+        }
+        else {
+            return "Fail";
+        }*/
+
+
+        /*try {
+            if(isValidationId(AddNewUser)) {
+                Users addUser = repo.save(AddNewUser);
+                return addUser;
+
+            }
+            throw new UserNotFoundException(" Do not enter ID: " + AddNewUser.getId()); //Thông báo lỗi:
+
+        } catch (UserNotFoundException e) {
+
+            return e.getMessage();
+        } */
+
+
     }
 
     //Hàm boolean xét đúng, sai.
-    public boolean isValidationId(Users users) {
+    public boolean isValidationId(Users users) throws UserNotFoundException{
+
         if(users.getId() != null) {              //Không cho nhập id, tránh trường hợp dùng Postman nhập id đã có trong MySQL vào hàm thêm 1 user mới khiến nó update lại thay vì thêm 1 user mới.
-            return false;
+           throw new UserNotFoundException(" Do not enter ID: " + users.getId()); //Thông báo lỗi:
         }
        return true;
     }
