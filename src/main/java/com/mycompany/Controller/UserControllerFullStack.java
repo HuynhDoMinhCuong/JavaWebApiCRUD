@@ -43,7 +43,7 @@ public class UserControllerFullStack {
     //Read: dùng GET method
     //Danh sách các users có trường enabled là true
     @GetMapping ("/list-users/online")        //Đặt tên đường dẫn, viết lại đường dẫn ở trang index.html sẽ thấy đường dẫn th:href="@{/list-users/online}">
-    public String showUserListTrue(Model model, @Param("keyword") String keyword, @Param("id") Integer id, RedirectAttributes ra) throws UserNotFoundException{
+    public String showUserListTrue(Model model, @Param("keyword") String keyword, @Param("id") Integer id) throws UserNotFoundException{
         if (keyword != null){
             List<Users> listUsers = service.findAllSearchNameEnabledTrue(keyword); //Tìm kiếm Users theo tên gần giống có enabled là true
             model.addAttribute("lstUsersEnableTrue", listUsers);       //Viết lại "lstUsersEnableTrue" đã đặt trong trang lstUsersEnabledTrue.html     <th:block th:each="user : ${lstUsersEnableTrue}">
