@@ -2,6 +2,7 @@ package com.mycompany.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.validation.annotation.Validated;
 
 //Dùng cho hàm tìm kiếm theo id, update, delete
 @Data

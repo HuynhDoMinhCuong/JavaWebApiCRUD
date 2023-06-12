@@ -49,7 +49,7 @@ public class UserControllerFullStack {
             model.addAttribute("lstUsersEnableTrue", listUsers);       //Viết lại "lstUsersEnableTrue" đã đặt trong trang lstUsersEnabledTrue.html     <th:block th:each="user : ${lstUsersEnableTrue}">
         }
         else if (id != null){
-            List <Users> listUsers = service.findAllSearchIdEnabledTrue(id);      //Tìm kiếm Users theo mã id có enabled là true
+            List<Users> listUsers = service.findAllSearchIdEnabledTrue(id);      //Tìm kiếm Users theo mã id có enabled là true
             model.addAttribute("lstUsersEnableTrue", listUsers);      //Viết lại "lstUsersEnableTrue" đã đặt trong trang lstUsersEnabledTrue.html     <th:block th:each="user : ${lstUsersEnableTrue}">
         }
         else
@@ -70,7 +70,7 @@ public class UserControllerFullStack {
             model.addAttribute("lstUsersEnableFalse", listUsers);    //Viết lại "lstUsersEnableFalse" đã đặt trong trang lstUsersEnabledFalse.html     <th:block th:each="user : ${lstUsersEnableFalse}">
         }
         else if (id != null){
-            List <Users> listUsers = service.findAllSearchIdEnabledFalse(id);    //Tìm kiếm Users theo mã id có enabled là false
+            List<Users> listUsers = service.findAllSearchIdEnabledFalse(id);    //Tìm kiếm Users theo mã id có enabled là false
             model.addAttribute("lstUsersEnableFalse", listUsers);    //Viết lại "lstUsersEnableFalse" đã đặt trong trang lstUsersEnabledFalse.html     <th:block th:each="user : ${lstUsersEnableFalse}">
         }
         else{
