@@ -10,7 +10,7 @@ public class TestJavaWeb01Application {
 		SpringApplication.run(TestJavaWeb01Application.class, args);
 	}
 
-//Dev01 12.06.2023 14:48
+//Dev01 12.06.2023 15:02
 
 }
 
