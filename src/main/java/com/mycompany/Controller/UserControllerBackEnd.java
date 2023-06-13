@@ -207,7 +207,6 @@ public class UserControllerBackEnd {
         }
     }
 
-
     //Test Postman tìm kiếm thông tin user theo mã id có trường enable là true
     @GetMapping(value="/users/enabled-true/{id}")
     public Object TestShowSearchIdTrue(@PathVariable("id") Integer id) {
