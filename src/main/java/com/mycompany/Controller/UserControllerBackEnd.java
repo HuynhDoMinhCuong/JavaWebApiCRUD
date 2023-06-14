@@ -95,11 +95,9 @@ public class UserControllerBackEnd {
     //Test Postman, thêm 1 user mới
     @PostMapping (value="/users")
     public Object TestCreateUser(@Validated @RequestBody Users AddNewUser) throws UserNotFoundException{
-
         if(AddNewUser.getEmail().isEmpty() || AddNewUser.getPassword().isEmpty() || AddNewUser.getFirstName().isEmpty() || AddNewUser.getLastName().isEmpty()) {
             return "Please enter full information";
         }
-
         else {
             try {
                 return service.saveNewUser(AddNewUser);
@@ -108,9 +106,7 @@ public class UserControllerBackEnd {
 
                 return e.getMessage();
             }
-
         }
-
     }
 
     /*

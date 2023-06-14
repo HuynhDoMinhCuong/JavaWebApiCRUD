@@ -10,6 +10,7 @@ import java.util.Optional;
 
 //Từ Class User, có khoá chính là ID, kiểu dữ liệu Integer
 //CrudRepository có các hàm save, findById, delete
+//Các câu lệnh Query
 public interface UserRepository extends CrudRepository<Users, Integer> {
 
     //Dùng cho hàm xoá luôn, xem trong UserService
