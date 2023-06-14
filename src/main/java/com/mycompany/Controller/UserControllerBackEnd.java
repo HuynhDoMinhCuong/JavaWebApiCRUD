@@ -22,6 +22,9 @@ public class UserControllerBackEnd {
     @Autowired
     private UserService service;   //service lấy dữ liệu từ UserService
 
+    @Autowired
+    private UserRepository repo;
+
     //Sử dụng Postman để test api
     //Kiểm tra dữ liệu nhập vào Class UsersDTO, không có lưu vào Database MySQL.
     @PostMapping (value="/test/users")
@@ -94,7 +97,7 @@ public class UserControllerBackEnd {
 
     //Test Postman, thêm 1 user mới
     @PostMapping (value="/users")
-    public Object TestCreateUser(@Validated @RequestBody Users AddNewUser) throws UserNotFoundException{
+    public Object TestCreateUser(@Validated @RequestBody Users AddNewUser) throws UserNotFoundException {
         if(AddNewUser.getEmail().isEmpty() || AddNewUser.getPassword().isEmpty() || AddNewUser.getFirstName().isEmpty() || AddNewUser.getLastName().isEmpty()) {
             return "Please enter full information";
         }
@@ -133,15 +136,29 @@ public class UserControllerBackEnd {
 
     //Test Postman edit, tìm kiếm thông tin user theo mã id, lưu lại thay đổi thông tin người dùng
     @PutMapping (value="/users/{id}")
-    public Users TestShowEditSaveForm(@RequestBody Users user, @PathVariable("id") Integer id) {
+    public Object TestShowEditSaveForm(@RequestBody Users user, @PathVariable("id") Integer id) throws UserNotFoundException {
         try {
-            user.setId(id);
+            user.setId(id) ;
             return service.updateUser(user);
-        } catch (UserNotFoundException e) {
 
-            return user;
+        } catch (UserNotFoundException e) {
+            //throw new UserNotFoundException("Email already exists: " + user.getEmail()); //Xuất thông báo không tìm thấy bất kỳ users nào với Email là...
+
+            return e.getMessage();
         }
     }
+
+    /*
+        //Test Postman edit, tìm kiếm thông tin user theo mã id, lưu lại thay đổi thông tin người dùng
+    @PutMapping (value="/users/{id}")
+    public BaseRespone TestShowEditSaveForm(@RequestBody Users user, @PathVariable("id") Integer id) throws Exception {
+            user.setId(id) ;
+            Users users = service.updateUser(user);
+            BaseRespone baseRespone = new BaseRespone("Success","Update success",users, null);
+            return baseRespone;
+    }
+    */
+
 
      /*
     {
@@ -154,9 +171,24 @@ public class UserControllerBackEnd {
     } */
 
     //Test Postman, tìm kiếm theo tên gần đúng (first name và last name)
+    /*
     @GetMapping(value="/users/search/{name}")
     public List<Users> TestShowSearchName(@PathVariable("name") String name) {
         List<Users> listUsers = service.findAllSearchName(name);
+        return listUsers;
+    }*/
+
+
+    @GetMapping(value="/users/search")
+    public List<Users> TestShowSearchName(Users users) {
+
+        System.out.println(users.getId());
+        System.out.println(users.getEmail());
+        System.out.println(users.getFirstName());
+        System.out.println(users.getLastName());
+
+        List<Users> listUsers = service.findAllSearchFull( users.getId(), users.getEmail(), users.getFirstName(), users.getLastName());
+
         return listUsers;
     }
 
@@ -230,10 +262,11 @@ public class UserControllerBackEnd {
     }
 
     //Test Postman, tìm kiếm theo email
+    /*
     @GetMapping(value="/users/email/{email}")
     public List<Users> TestShowSearchEmail(@PathVariable("email") String email) {
         List<Users> listUsers = service.findAllSearchEmail(email);
         return listUsers;
-    }
+    }*/
 
 }

@@ -21,9 +21,19 @@ public interface UserRepository extends CrudRepository<Users, Integer> {
     public List<Users> findAllByEnabled(boolean enabled);
 
     //Hàm tìm kiếm theo họ, tên gần giống
-    @Query ("SELECT n FROM Users n WHERE n.firstName LIKE %?1%"
-                + " OR n.lastName LIKE %?1%")
-    public List<Users> findAllSearchName (String keyword);
+    /*@Query (value= "SELECT n FROM Users n WHERE " +
+            "(?1 is null or n.firstName LIKE %?1%) " +
+            "and (?2 is null or n.lastName LIKE %?2%) " +
+            "and (?3 is null or n.email = ?3) " +
+            "and (?4 = 0 or n.id = ?4)")
+    public List<Users> findAllSearchFull (String firstName, String lastName, String email, Integer id); */
+
+    //Hàm tìm kiếm theo họ, tên gần giống
+    @Query ("SELECT n FROM Users n WHERE n.id = ?1"
+              +" OR n.email = ?2"
+              +" OR n.firstName  = ?3"
+              +" AND n.lastName  = ?4")
+    public List<Users> findAllSearchFull (Integer id, String email, String firstName, String lastName);
 
     //Hàm tìm kiếm theo id
     @Query ("SELECT i FROM Users i WHERE i.id = ?1")
@@ -56,6 +66,6 @@ public interface UserRepository extends CrudRepository<Users, Integer> {
 
     //Hàm tìm kiếm email
     @Query ("SELECT e FROM Users e WHERE e.email = ?1")
-    public List<Users> findAllSearchEmail (String email);
+    public Optional<Users> findAllSearchEmail (String email);
 
 }

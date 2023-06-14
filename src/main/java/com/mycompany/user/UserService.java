@@ -29,11 +29,16 @@ public class UserService {
     }
 
     //Hàm tìm kiếm theo tên gần giống, firstName và lastName và xuất ra danh sách, xem câu lệnh Query trong UserRepository
-    public List<Users> findAllSearchName(String keyword) {
-        if (keyword != null) {
-            return repo.findAllSearchName(keyword);
+    public List<Users> findAllSearchFull(Integer id, String email, String firstName, String lastName) {
+        List<Users> search = repo.findAllSearchFull(id, email, firstName, lastName);
+        if (search.isEmpty()) {
+            return (List<Users>) repo.findAll();
         }
-        return (List<Users>) repo.findAll();
+        return search;
+
+       // return repo.findAllSearchFull(id, email, firstName, lastName);
+
+
     }
 
     //Hàm tìm kiếm theo tên gần giống, firstName và lastName, có enable là true và xuất ra danh sách, xem câu lệnh Query trong UserRepository
@@ -77,29 +82,37 @@ public class UserService {
     }
 
     //Hàm tìm kiếm theo email, xem câu lệnh Query trong UserRepository
-    public List<Users> findAllSearchEmail(String email) {
+    /*
+    public Optional<Users> findAllSearchEmail(String email) {
         if (email != null) {
             return repo.findAllSearchEmail(email);
         }
         return (List<Users>) repo.findAll();
-    }
+    } */
 
     //Hàm Save để sửa thông tin 1 User và lưu lại. Dùng cho Update và Delete tạm thời (cập nhập trường enable từ true thành false để ẩn khỏi danh sách Users có trường enable là false)
     //Xem UserControllerBackEnd sẽ thấy được gọi hàm Save ở hàm @PutMapping (value="/users/{id}")
     //Xem UserControllerFullStack sẽ thấy được gọi Save ở hàm @PostMapping("/ListUsers/update")
-    public Users save(Users Save){
-        Users save = repo.save(Save);
-        return save;
+    public Users save(Users Save) throws UserNotFoundException{
+
+        if(isValidationEmail(Save)) {
+            Users save = repo.save(Save);
+            return save;
+        }
+        throw new UserNotFoundException(" Error: " + Save.getId()); //Thông báo lỗi:
+
     }
 
     //Hàm saveNewUser, dùng để thêm 1 user mới, bị ràng buộc bởi hàm public boolean isValidationId.
     public Object saveNewUser (Users AddNewUser) throws UserNotFoundException {
 
-        if(isValidationId(AddNewUser)) {
+        if(isValidationId(AddNewUser) && isValidationEmail(AddNewUser)) {
             Users addUser = repo.save(AddNewUser);
             return addUser;
         }
-        throw new UserNotFoundException(" Do not enter ID: " + AddNewUser.getId()); //Thông báo lỗi:
+        throw new UserNotFoundException(" Error: " + AddNewUser.getId()); //Thông báo lỗi:
+
+
 
        /* if(isValidationId(AddNewUser)){
             Users addUser = repo.save(AddNewUser);
@@ -135,6 +148,16 @@ public class UserService {
        return true;
     }
 
+    //Hàm bool email
+    public boolean isValidationEmail (Users email) throws UserNotFoundException {
+        Optional<Users> result = repo.findAllSearchEmail(email.getEmail()); //Tìm kiếm theo email
+        //Kiểm tra giá trị
+        if (result.isPresent()) {
+            throw new UserNotFoundException("Email already exists: " + email.getEmail()); //Xuất thông báo không tìm thấy bất kỳ users nào với Email là...
+        }
+
+        return true;
+    }
 
     //Hàm tìm kiếm theo mã id user
     //Xem trang lstUsersAll.html sẽ thấy đoạn code lấy đường dẫn theo mã id User
@@ -148,6 +171,19 @@ public class UserService {
         }
         throw new UserNotFoundException("Could not find any users with ID " +id); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
     }
+
+    /*
+    //Hàm tìm kiếm theo email
+    public Users findAllSearchEmail (String email) throws UserNotFoundException {
+        Optional<Users> search = repo.findAllSearchEmail(email);
+        if (search.isEmpty()) {
+            throw new UserNotFoundException("Could not find any users with Email " + email); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
+        }
+
+        return search.get();
+        // return repo.findAllSearchFull(id, email, firstName, lastName);
+    }*/
+
 
     //Hàm xoá theo mã id user, xoá luôn trong Database MySQL
     /*
@@ -163,10 +199,10 @@ public class UserService {
     //Hàm update, Postman.
     public Users updateUser(Users user) throws UserNotFoundException {
         Optional<Users> result = repo.findById(user.getId()); //Tìm kiếm theo mã id
-        //Kiểm tra giá trị
-        if (result.isPresent()) {
-            Users update = result.get();
 
+        //Kiểm tra giá trị
+        if (result.isPresent() && isValidationEmail(user)) {
+            Users update = result.get();
             //updateUser.setId(user.getId());
             update.setEmail(user.getEmail());
             update.setPassword(user.getPassword());
@@ -174,10 +210,12 @@ public class UserService {
             update.setLastName(user.getLastName());
             update.setEnabled(user.isEnabled());
 
-            Users updateUser = this.save(update);  //Chuyển đến hàm EditSave để lưu lại
+            Users updateUser = repo.save(update);  //Chuyển đến hàm EditSave để lưu lại
             return updateUser;
         }
+
         throw new UserNotFoundException("Could not find any users with ID " + user.getId()); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
+
     }
 
     //Hàm xoá tạm thời theo mã id user, cập nhật lại trường enabled từ true thành false để ẩn khỏi danh sách users có trường enable là true.
@@ -247,7 +285,5 @@ public class UserService {
         }
         throw new UserNotFoundException("Could not find any users with ID " + user.getId()); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
     }
-
-
 
 }
