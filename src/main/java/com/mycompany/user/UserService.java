@@ -76,6 +76,14 @@ public class UserService {
         return (List<Users>) repo.findAllByEnabled(false);
     }
 
+    //Hàm tìm kiếm theo email, xem câu lệnh Query trong UserRepository
+    public List<Users> findAllSearchEmail(String email) {
+        if (email != null) {
+            return repo.findAllSearchEmail(email);
+        }
+        return (List<Users>) repo.findAll();
+    }
+
     //Hàm Save để sửa thông tin 1 User và lưu lại. Dùng cho Update và Delete tạm thời (cập nhập trường enable từ true thành false để ẩn khỏi danh sách Users có trường enable là false)
     //Xem UserControllerBackEnd sẽ thấy được gọi hàm Save ở hàm @PutMapping (value="/users/{id}")
     //Xem UserControllerFullStack sẽ thấy được gọi Save ở hàm @PostMapping("/ListUsers/update")
@@ -86,6 +94,7 @@ public class UserService {
 
     //Hàm saveNewUser, dùng để thêm 1 user mới, bị ràng buộc bởi hàm public boolean isValidationId.
     public Object saveNewUser (Users AddNewUser) throws UserNotFoundException {
+
         if(isValidationId(AddNewUser)) {
             Users addUser = repo.save(AddNewUser);
             return addUser;
@@ -125,6 +134,7 @@ public class UserService {
         }
        return true;
     }
+
 
     //Hàm tìm kiếm theo mã id user
     //Xem trang lstUsersAll.html sẽ thấy đoạn code lấy đường dẫn theo mã id User
@@ -237,5 +247,7 @@ public class UserService {
         }
         throw new UserNotFoundException("Could not find any users with ID " + user.getId()); //Xuất thông báo không tìm thấy bất kỳ users nào với id là...
     }
+
+
 
 }

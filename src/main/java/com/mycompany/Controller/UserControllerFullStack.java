@@ -26,7 +26,7 @@ public class UserControllerFullStack {
     //Read: dùng GET method
     //Danh sách các users
     @GetMapping ("/list-users/all")        //Đặt tên đường dẫn, viết lại đường dẫn ở trang index.html sẽ thấy đường dẫn th:href="@{/list-users/all}">
-    public String showUserListAll(Model model, @Param("keyword") String keyword, @Param("id") Integer id) {
+    public String showUserListAll(Model model, @Param("keyword") String keyword, @Param("id") Integer id,  @Param("email") String email) {
         if (keyword != null){
             List<Users> listUsers = service.findAllSearchName(keyword);          //Tìm kiếm Users theo tên gần giống
             model.addAttribute("listUsersAll", listUsers);           //Viết lại "listUsersAll" đã đặt trong trang lstUsersAll.html     <th:block th:each="user : ${listUsersAll}">
@@ -34,6 +34,10 @@ public class UserControllerFullStack {
         else if (id != null){
             List<Users> listUsers = service.findAllSearchId(id); //Tìm kiếm Users theo mã id
             //Users listUsers = service.searchID(id); //
+            model.addAttribute("listUsersAll", listUsers);          //Viết lại "listUsersAll" đã đặt trong trang lstUsersAll.html     <th:block th:each="user : ${listUsersAll}">
+        }
+        else if (email != null){
+            List<Users> listUsers = service.findAllSearchEmail(email); //Tìm kiếm Users theo email
             model.addAttribute("listUsersAll", listUsers);          //Viết lại "listUsersAll" đã đặt trong trang lstUsersAll.html     <th:block th:each="user : ${listUsersAll}">
         }
         else {
@@ -238,21 +242,6 @@ public class UserControllerFullStack {
         }
     }*/
 
-    @RequestMapping("/error")
-    public String handleError(HttpServletRequest request) {
-        Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 
-        if (status != null) {
-            Integer statusCode = Integer.valueOf(status.toString());
-
-            if(statusCode == HttpStatus.NOT_FOUND.value()) {
-                return "error-404";
-            }
-            else if(statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
-                return "error-500";
-            }
-        }
-        return "error";
-    }
 
 }

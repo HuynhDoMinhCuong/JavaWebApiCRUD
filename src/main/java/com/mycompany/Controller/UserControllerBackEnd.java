@@ -229,4 +229,11 @@ public class UserControllerBackEnd {
         return listUsers;
     }
 
+    //Test Postman, tìm kiếm theo email
+    @GetMapping(value="/users/email/{email}")
+    public List<Users> TestShowSearchEmail(@PathVariable("email") String email) {
+        List<Users> listUsers = service.findAllSearchEmail(email);
+        return listUsers;
+    }
+
 }

@@ -55,7 +55,7 @@ public interface UserRepository extends CrudRepository<Users, Integer> {
 
 
     //Hàm tìm kiếm email
-    @Query ("SELECT n FROM Users n WHERE n.email =?1")
-    public List<Users> findAllSearchEmail (String keyword);
+    @Query ("SELECT e FROM Users e WHERE e.email = ?1")
+    public List<Users> findAllSearchEmail (String email);
 
 }
