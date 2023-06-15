@@ -28,7 +28,7 @@ public class UserService {
         return (List<Users>) repo.findAllByEnabled(false);  //Trả về danh sách Users có enabled là false
     }
 
-    //Hàm tìm kiếm theo tên gần giống, firstName và lastName và xuất ra danh sách, xem câu lệnh Query trong UserRepository
+    //Hàm tìm kiếm theo id, email, firstName, lastName và xuất ra danh sách, xem câu lệnh Query trong UserRepository
     public List<Users> findAllSearchFull(Integer id, String email, String firstName, String lastName) {
         List<Users> search = repo.findAllSearchFull(id, email, firstName, lastName);
         if (search.isEmpty()) {
