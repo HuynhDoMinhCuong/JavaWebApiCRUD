@@ -104,9 +104,7 @@ public class UserControllerBackEnd {
         else {
             try {
                 return service.saveNewUser(AddNewUser);
-
             } catch (UserNotFoundException e) {
-
                 return e.getMessage();
             }
         }
