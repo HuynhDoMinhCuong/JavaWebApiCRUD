@@ -80,7 +80,7 @@ public class UserControllerBackEnd {
         return listUsers;
     }
 
-    //Test Postman, xem danh sách các users có enabled là true
+    //Test Postman, xem danh sách các users có enabled là false
     @GetMapping (value="/users/false")
     public  List<Users> TestShowUserListEnabledFalse() {
         List<Users> listUsers = service.listAllEnabledFalse();
