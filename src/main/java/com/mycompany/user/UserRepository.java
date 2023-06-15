@@ -28,7 +28,7 @@ public interface UserRepository extends CrudRepository<Users, Integer> {
             "and (?4 = 0 or n.id = ?4)")
     public List<Users> findAllSearchFull (String firstName, String lastName, String email, Integer id); */
 
-    //Hàm tìm kiếm theo họ, tên gần giống
+    //Hàm tìm kiếm theo id, email, first Name, last Name
     @Query ("SELECT n FROM Users n WHERE n.id = ?1"
               +" OR n.email = ?2"
               +" OR n.firstName  = ?3"
